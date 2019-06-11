@@ -18,21 +18,14 @@ const argv = yargs
   )
   .option('entry', {
     alias: 'e',
-    describe: 'The path of the source folder',
-    demandOption: true
+    describe: 'The path of the source folder'
   })
   .option('output', {
     alias: 'o',
-    describe: 'The filename of the output file',
-    demandOption: true
-  })
-  .option('delete-source-folder', {
-    alias: 'del',
-    describe: 'Need to delete the resource folder'
-  })
-  .argv;
+    describe: 'The filename of the output file'
+  }).argv;
 
-// console.log('argv', argv);
+console.log('argv', argv);
 
 const initProjectPath = path.normalize(`${__dirname}/..`);
 const pathToFolder = argv.entry;
