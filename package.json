@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src",
+    "start": "node ./src/index test_folder foo",
     "lint": "eslint src/",
     "stop": "taskkill /F /IM node.exe"
   },
@@ -29,6 +29,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.5.12",
     "ramda": "^0.26.1",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "yargs": "^13.2.4"
   }
 }
