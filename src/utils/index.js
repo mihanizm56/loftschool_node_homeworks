@@ -7,17 +7,17 @@ const logger = value => {
 	console.log("time", value);
 };
 
-const finishProcessWithTime = responce => time => {
+const finishProcessWithTime = response => time => {
 	const actualDate = timeTransformer(new Date());
 
 	console.log("finished", time, new Date());
-	responce.end(`stopped time ${time} ,actual time ${actualDate}`);
+	response.end(`stopped time ${time} ,actual time ${actualDate}`);
 };
 
 const timeTransformer = timeInMs =>
 	moment.utc(timeInMs).format("Y-MM-DD HH:mm:ss");
 
-module.exports.makeTimer = responce => {
+module.exports.makeTimer = response => {
 	const now = new Date();
 	const initialTime = now.getTime();
 	const finishTime = initialTime + timeToEnd;
@@ -35,7 +35,7 @@ module.exports.makeTimer = responce => {
 	setTimeout(function() {
 		clearInterval(timerId);
 		Ramda.compose(
-			finishProcessWithTime(responce),
+			finishProcessWithTime(response),
 			timeTransformer
 		)(finishTime);
 	}, timeToEnd);

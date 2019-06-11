@@ -5,9 +5,9 @@ const SERVER_PORT = process.env.PORT || 3000;
 
 const { makeTimer } = require("./utils");
 
-const server = http.createServer((request, responce) => {
+const server = http.createServer((request, response) => {
 	if (request.method === "GET") {
-		makeTimer(responce);
+		makeTimer(response);
 	}
 });
 
