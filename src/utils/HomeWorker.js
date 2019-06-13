@@ -1,18 +1,18 @@
-const fs = require("fs-extra");
-const path = require("path");
-const { walker } = require("./walker");
-const { removeFolder } = require("./files-remover");
+const fs = require('fs-extra');
+const path = require('path');
+const { walker } = require('./walker');
+const { removeFolder } = require('./files-remover');
 
 class HomeWorker {
-  constructor(pathToRead, pathToCreate, initProjectPath) {
+  constructor (pathToRead, pathToCreate, initProjectPath) {
     this.pathToRead = pathToRead;
     this.pathToCreate = pathToCreate;
     this.initProjectPath = initProjectPath;
-    this.normalizedPathToFolder = path.join(initProjectPath, "/", pathToRead);
-    this.folderPath = path.join(initProjectPath, "/", pathToCreate);
+    this.normalizedPathToFolder = path.join(initProjectPath, '/', pathToRead);
+    this.folderPath = path.join(initProjectPath, '/', pathToCreate);
   }
 
-  init(deleteEntryFolder) {
+  init (deleteEntryFolder) {
     try {
       const isOutputFolderEmpty = this.checkIfDirIsEmpty(this.folderPath);
 
@@ -26,7 +26,7 @@ class HomeWorker {
 
     walker(this.normalizedPathToFolder, this.saveFile.bind(this), err => {
       if (err) {
-        console.log("err", err);
+        console.log('err', err);
         return process.exit(1);
       }
 
@@ -34,22 +34,22 @@ class HomeWorker {
     });
   }
 
-  checkIfDirIsEmpty(dirPath) {
-    return !Boolean(fs.readdirSync(dirPath).length);
+  checkIfDirIsEmpty (dirPath) {
+    return !fs.readdirSync(dirPath).length;
   }
 
-  readFile(filePath) {
+  readFile (filePath) {
     return fs.readFileSync(filePath);
   }
 
-  writeFile(filePath, content) {
+  writeFile (filePath, content) {
     return fs.writeFileSync(filePath, content);
   }
 
-  makeDir(pathDir, callback) {
+  makeDir (pathDir, callback) {
     fs.mkdir(pathDir, { recursive: true }, err => {
       if (err) {
-        if (err.code === "EEXIST") {
+        if (err.code === 'EEXIST') {
           return callback && callback();
         }
 
@@ -60,18 +60,18 @@ class HomeWorker {
     });
   }
 
-  deleteDir(dirName) {
+  deleteDir (dirName) {
     fs.removeSync(dirName);
-    console.log("remove done");
+    console.log('remove done');
   }
 
-  saveFile(filePath, done) {
+  saveFile (filePath, done) {
     const itemFullName = path.basename(filePath);
     const firstItemUpperCaseLetter = itemFullName[0].toUpperCase();
     const itemContent = this.readFile(filePath);
     const dirPathForItem = path.join(
       this.folderPath,
-      "/",
+      '/',
       firstItemUpperCaseLetter
     );
 
@@ -79,13 +79,13 @@ class HomeWorker {
       if (error) {
         this.makeDir(dirPathForItem, () => {
           this.writeFile(
-            path.join(dirPathForItem, "/", itemFullName),
+            path.join(dirPathForItem, '/', itemFullName),
             itemContent
           );
         });
       } else {
         this.writeFile(
-          path.join(dirPathForItem, "/", itemFullName),
+          path.join(dirPathForItem, '/', itemFullName),
           itemContent
         );
       }

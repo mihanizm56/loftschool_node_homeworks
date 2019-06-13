@@ -1,12 +1,12 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const walker = (dir, callbackOnFile, done) => {
   fs.readdir(dir, (err, list) => {
     if (err) return done(err);
     let i = 0;
 
-    const next = function(err) {
+    const next = function (err) {
       if (err) return done(err);
 
       let filePath = list[i++];
