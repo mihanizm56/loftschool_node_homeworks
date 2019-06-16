@@ -1,18 +1,18 @@
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const { walker } = require('./walker');
-const { removeFolder } = require('./files-remover');
 
 class HomeWorker {
-  constructor (pathToRead, pathToCreate, initProjectPath) {
+  constructor (pathToRead, pathToCreate, initProjectPath, deleteEntryFolder) {
     this.pathToRead = pathToRead;
     this.pathToCreate = pathToCreate;
     this.initProjectPath = initProjectPath;
+    this.deleteEntryFolder = deleteEntryFolder;
     this.normalizedPathToFolder = path.join(initProjectPath, '/', pathToRead);
     this.folderPath = path.join(initProjectPath, '/', pathToCreate);
   }
 
-  init (deleteEntryFolder) {
+  init () {
     try {
       const isOutputFolderEmpty = this.checkIfDirIsEmpty(this.folderPath);
 
@@ -26,11 +26,11 @@ class HomeWorker {
 
     walker(this.normalizedPathToFolder, this.saveFile.bind(this), err => {
       if (err) {
-        console.log('err', err);
+        console.log('catch an error!');
         return process.exit(1);
       }
 
-      deleteEntryFolder && this.deleteDir(this.normalizedPathToFolder);
+      this.deleteEntryFolder && this.removeDir(this.normalizedPathToFolder);
     });
   }
 
@@ -60,9 +60,18 @@ class HomeWorker {
     });
   }
 
-  deleteDir (dirName) {
-    fs.removeSync(dirName);
-    console.log('remove done');
+  removeDir (dirPath) {
+    if (fs.existsSync(dirPath)) {
+      fs.readdirSync(dirPath).forEach(item => {
+        const filePath = path.join(dirPath, item);
+        if (fs.lstatSync(filePath).isDirectory()) {
+          this.removeDir(filePath);
+        } else {
+          fs.unlinkSync(filePath);
+        }
+      });
+      fs.rmdirSync(dirPath);
+    }
   }
 
   saveFile (filePath, done) {
@@ -75,23 +84,25 @@ class HomeWorker {
       firstItemUpperCaseLetter
     );
 
-    fs.readdir(dirPathForItem, (error, items) => {
-      if (error) {
-        this.makeDir(dirPathForItem, () => {
-          this.writeFile(
-            path.join(dirPathForItem, '/', itemFullName),
-            itemContent
-          );
-        });
-      } else {
+    if (fs.existsSync(dirPathForItem)) {
+      this.writeFile(
+        path.join(dirPathForItem, '/', itemFullName),
+        itemContent
+      );
+    } else {
+      this.makeDir(dirPathForItem, () => {
         this.writeFile(
           path.join(dirPathForItem, '/', itemFullName),
           itemContent
         );
-      }
+      });
+    }
 
-      done();
-    });
+    if(this.deleteEntryFolder){
+      fs.unlinkSync(filePath);
+    }
+
+    done();
   }
 }
 

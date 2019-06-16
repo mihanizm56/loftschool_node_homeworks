@@ -34,6 +34,6 @@ const pathToFolder = argv.entry;
 const pathToNewFolder = argv.output;
 const deleteEntryFolder = argv.deleteEntry;
 
-const homeWork = new HomeWorker(pathToFolder, pathToNewFolder, initProjectPath);
+const homeWork = new HomeWorker(pathToFolder, pathToNewFolder, initProjectPath, deleteEntryFolder);
 
-homeWork.init(deleteEntryFolder);
+homeWork.init();
