@@ -13,18 +13,21 @@ module.exports.makeTimer = response => {
 	const initialTime = now.getTime();
 	const finishTime = initialTime + timeToEnd;
 	const iterableTime = initialTime + intervalIteration;
+	let deltaTime = finishTime - initialTime
 
 	const timerId = setInterval(() => {
+		deltaTime = deltaTime - intervalIteration
+		
+		if(!deltaTime) {
+			console.log('stop the interval')
+			return clearInterval(timerId);
+		}
+
 		Ramda.compose(
 			logger,
 			timeTransformer
 		)(iterableTime);
 	}, intervalIteration);
-
-	setTimeout(function() {
-		console.log('timer finished')
-		clearInterval(timerId);
-	}, timeToEnd);
 
 	response.end(`actual time ${new Date().toUTCString()}`);
 };
