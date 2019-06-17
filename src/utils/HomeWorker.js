@@ -13,14 +13,16 @@ class HomeWorker {
   }
 
   init () {
-    try {
+    const isDirExists = this.checkIfDirExists(this.folderPath)
+
+    if(isDirExists){
       const isOutputFolderEmpty = this.checkIfDirIsEmpty(this.folderPath);
 
       if (!isOutputFolderEmpty) {
-        removeFolder(this.folderPath);
+        this.removeDir(this.folderPath);
         this.makeDir(this.folderPath);
       }
-    } catch (error) {
+    } else {
       this.makeDir(this.folderPath);
     }
 
@@ -34,8 +36,12 @@ class HomeWorker {
     });
   }
 
+  checkIfDirExists(dirPath){
+    return fs.existsSync(dirPath)
+  }
+
   checkIfDirIsEmpty (dirPath) {
-    return !fs.readdirSync(dirPath).length;
+    return !Boolean(fs.readdirSync(dirPath).length)
   }
 
   readFile (filePath) {
@@ -61,7 +67,9 @@ class HomeWorker {
   }
 
   removeDir (dirPath) {
-    if (fs.existsSync(dirPath)) {
+    const isDirExists = this.checkIfDirExists(this.folderPath)
+
+    if (isDirExists) {
       fs.readdirSync(dirPath).forEach(item => {
         const filePath = path.join(dirPath, item);
         if (fs.lstatSync(filePath).isDirectory()) {
@@ -83,8 +91,9 @@ class HomeWorker {
       '/',
       firstItemUpperCaseLetter
     );
+    const isDirExists = this.checkIfDirExists(dirPathForItem)
 
-    if (fs.existsSync(dirPathForItem)) {
+    if (isDirExists) {
       this.writeFile(
         path.join(dirPathForItem, '/', itemFullName),
         itemContent
