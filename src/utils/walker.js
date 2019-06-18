@@ -1,30 +1,36 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const walker = (dir, callbackOnFile, done) => {
-  fs.readdir(dir, (err, list) => {
-    if (err) return done(err);
-    let i = 0;
+const walker = (dir, callbackOnFile) => {
+  return new Promise((res, rej) => {
+    fs.readdir(dir, (err, list) => {
+      if (err) return rej(err);
+      let i = 0;
 
-    const next = function (err) {
-      if (err) return done(err);
+      const next = () => {
+        let filePath = list[i++];
 
-      let filePath = list[i++];
+        if (!filePath) return res(null);
 
-      if (!filePath) return done(null);
+        filePath = path.join(dir, filePath);
 
-      filePath = path.join(dir, filePath);
+        fs.stat(filePath, (err, stat) => {
+          if (err) return rej(err);
 
-      fs.stat(filePath, (_, stat) => {
-        if (stat && stat.isDirectory()) {
-          walker(filePath, callbackOnFile, next);
-        } else {
-          callbackOnFile(filePath, next);
-        }
-      });
-    };
+          if (stat && stat.isDirectory()) {
+            walker(filePath, callbackOnFile)
+              .then(() => next())
+              .catch(rej);
+          } else {
+            callbackOnFile(filePath)
+              .then(() => next())
+              .catch(rej);
+          }
+        });
+      };
 
-    next();
+      next();
+    });
   });
 };
 
