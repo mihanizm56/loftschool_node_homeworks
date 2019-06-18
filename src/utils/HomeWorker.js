@@ -9,6 +9,7 @@ const {
   mkdir,
   lstat,
   rmdir,
+  stat,
   unlink
 } = require("./onPromises");
 
@@ -26,7 +27,9 @@ class HomeWorker {
     this.checkIfDirExists(this.folderPath)
       .then(() => {
         console.log("dir exists");
-        this.checkIfDirIsEmpty(this.folderPath);
+        this.checkIfDirIsEmpty(this.folderPath).then(result =>
+          console.log("result", result)
+        );
       })
       .catch(error => console.log("error", error));
 
@@ -47,12 +50,15 @@ class HomeWorker {
   }
 
   checkIfDirExists(dirPath) {
-    return stat(dirPath).
+    return stat(dirPath).then(item => {
+      return item.isDirectory();
+    });
   }
 
   checkIfDirIsEmpty(dirPath) {
     return readdir(dirPath).then(arrayOfFiles => {
-      const isDirEmpty = Boolean(arrayOfFiles.length);
+      const isDirEmpty = !Boolean(arrayOfFiles.length);
+      return isDirEmpty;
     });
   }
 
