@@ -30,12 +30,14 @@ class HomeWorker {
         this.checkIfDirIsEmpty(this.folderPath).then(isEmpty => {
           console.log("isEmpty", isEmpty);
           if (!isEmpty) {
+            // console.log("dir to remove", this.folderPath);
             this.removeDir(this.folderPath);
             // this.makeDir(this.folderPath);
           }
         });
       })
       .catch(() => {
+        console.log("dir does not exist");
         this.makeDir(this.folderPath);
       });
 
@@ -79,9 +81,11 @@ class HomeWorker {
   }
 
   removeDir(dirPath) {
-    walker(dirPath, this.removeFile.bind(this)).then(filePath =>
-      console.log("delete done")
-    );
+    walker(
+      dirPath,
+      this.removeFiles.bind(this),
+      this.removeFolders.bind(this)
+    ).then(filePath => console.log("delete done"));
 
     // if (isDirExists) {
     //   fs.readdirSync(dirPath).forEach(item => {
@@ -97,20 +101,34 @@ class HomeWorker {
     // }
   }
 
-  removeFile(filePath) {
-    return new Promise(resolve => {
-      console.log("filePath path", filePath);
-      resolve();
-      // });
-      // console.log("filePath", filePath);
-      // return lstat(filePath).then(statFile => {
-      //   console.log("isDirectory", statFile.isDirectory());
-      //   statFile.isDirectory() ? rmdir(filePath) : unlink(filePath);
-      // });
+  removeFiles(pathToFile) {
+    console.log("check pathToFile", pathToFile);
+    return unlink(pathToFile);
 
-      // console.log("to delete", filePath);
-      // return unlink(filePath).then();
-    });
+    // });
+    // console.log("filePath", filePath);
+    // return lstat(filePath).then(statFile => {
+    //   console.log("isDirectory", statFile.isDirectory());
+    //   statFile.isDirectory() ? rmdir(filePath) : unlink(filePath);
+    // });
+
+    // console.log("to delete", filePath);
+    // return unlink(filePath).then();
+    // });
+  }
+
+  removeFolders(pathToFolder) {
+    console.log("check removeFolders", pathToFolder);
+    return rmdir(pathToFolder);
+
+    // readdir(pathToFolders).forEach(item => {
+    //   const folderPath = path.join(dirPath, item);
+
+    //   if (fs.lstatSync(folderPath).isDirectory()) {
+    //     this.removeDir(folderPath);
+    //   }
+    // });
+    // fs.rmdirSync(dirPath);
   }
 
   saveFile(filePath) {
