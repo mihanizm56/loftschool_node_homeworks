@@ -27,11 +27,17 @@ class HomeWorker {
     this.checkIfDirExists(this.folderPath)
       .then(() => {
         console.log("dir exists");
-        this.checkIfDirIsEmpty(this.folderPath).then(result =>
-          console.log("result", result)
-        );
+        this.checkIfDirIsEmpty(this.folderPath).then(isEmpty => {
+          console.log("isEmpty", isEmpty);
+          if (!isEmpty) {
+            this.removeDir(this.folderPath);
+            // this.makeDir(this.folderPath);
+          }
+        });
       })
-      .catch(error => console.log("error", error));
+      .catch(() => {
+        this.makeDir(this.folderPath);
+      });
 
     // if (isDirExists) {
     //   const isOutputFolderEmpty = this.checkIfDirIsEmpty(this.folderPath);
@@ -67,38 +73,45 @@ class HomeWorker {
   }
 
   writeFile(filePath, content) {
-    return fs.writeFileSync(filePath, content);
+    return writeFile(filePath, content);
   }
 
-  makeDir(pathDir, callback) {
-    fs.mkdir(pathDir, { recursive: true }, err => {
-      if (err) {
-        if (err.code === "EEXIST") {
-          return callback && callback();
-        }
-
-        return;
-      }
-
-      callback && callback();
-    });
+  makeDir(pathDir) {
+    return mkdir(pathDir);
   }
 
   removeDir(dirPath) {
-    const isDirExists = this.checkIfDirExists(this.folderPath);
+    walker(dirPath, this.removeFile.bind(this)).then(filePath =>
+      console.log("delete done")
+    );
 
-    if (isDirExists) {
-      fs.readdirSync(dirPath).forEach(item => {
-        const filePath = path.join(dirPath, item);
+    // if (isDirExists) {
+    //   fs.readdirSync(dirPath).forEach(item => {
+    //     const filePath = path.join(dirPath, item);
 
-        if (fs.lstatSync(filePath).isDirectory()) {
-          this.removeDir(filePath);
-        } else {
-          fs.unlinkSync(filePath);
-        }
-      });
-      fs.rmdirSync(dirPath);
-    }
+    //     if (fs.lstatSync(filePath).isDirectory()) {
+    //       this.removeDir(filePath);
+    //     } else {
+    //       fs.unlinkSync(filePath);
+    //     }
+    //   });
+    //   fs.rmdirSync(dirPath);
+    // }
+  }
+
+  removeFile(filePath) {
+    // return new Promise(resolve => {
+    console.log("filePath path", filePath);
+    resolve();
+    // });
+    // console.log("filePath", filePath);
+    // return lstat(filePath).then(statFile => {
+    //   console.log("isDirectory", statFile.isDirectory());
+    //   statFile.isDirectory() ? rmdir(filePath) : unlink(filePath);
+    // });
+
+    // console.log("to delete", filePath);
+    // return unlink(filePath).then();
   }
 
   saveFile(filePath) {

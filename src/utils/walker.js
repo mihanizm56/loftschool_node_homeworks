@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const walker = (dir, callbackOnFile) => {
+  console.log("walker", dir);
   return new Promise((res, rej) => {
     fs.readdir(dir, (err, list) => {
       if (err) return rej(err);
