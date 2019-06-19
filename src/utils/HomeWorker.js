@@ -56,9 +56,7 @@ class HomeWorker {
   }
 
   checkIfDirExists(dirPath) {
-    return stat(dirPath).then(item => {
-      return item.isDirectory();
-    });
+    return access(dirPath);
   }
 
   checkIfDirIsEmpty(dirPath) {
@@ -100,18 +98,19 @@ class HomeWorker {
   }
 
   removeFile(filePath) {
-    // return new Promise(resolve => {
-    console.log("filePath path", filePath);
-    resolve();
-    // });
-    // console.log("filePath", filePath);
-    // return lstat(filePath).then(statFile => {
-    //   console.log("isDirectory", statFile.isDirectory());
-    //   statFile.isDirectory() ? rmdir(filePath) : unlink(filePath);
-    // });
+    return new Promise(resolve => {
+      console.log("filePath path", filePath);
+      resolve();
+      // });
+      // console.log("filePath", filePath);
+      // return lstat(filePath).then(statFile => {
+      //   console.log("isDirectory", statFile.isDirectory());
+      //   statFile.isDirectory() ? rmdir(filePath) : unlink(filePath);
+      // });
 
-    // console.log("to delete", filePath);
-    // return unlink(filePath).then();
+      // console.log("to delete", filePath);
+      // return unlink(filePath).then();
+    });
   }
 
   saveFile(filePath) {
