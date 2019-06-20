@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "check": "node src/ --entry ./bar --output ./foo",
     "lint": "eslint src/",
     "stop": "taskkill /F /IM node.exe"
   },
