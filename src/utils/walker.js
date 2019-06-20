@@ -11,7 +11,6 @@ const walker = (dir, callbackOnFile, callBackOnFolder) => {
         let filePath = list[i++];
 
         if (!filePath) {
-          console.log("////////////////", dir, callBackOnFolder);
           if (callBackOnFolder) {
             return callBackOnFolder(dir)
               .then(() => res(null))
@@ -27,7 +26,7 @@ const walker = (dir, callbackOnFile, callBackOnFolder) => {
           if (err) return rej(err);
 
           if (stat && stat.isDirectory()) {
-            walker(filePath, callbackOnFile)
+            walker(filePath, callbackOnFile, callBackOnFolder)
               .then(() => next())
               .catch(rej);
           } else {

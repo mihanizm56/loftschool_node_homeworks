@@ -30,31 +30,47 @@ class HomeWorker {
         this.checkIfDirIsEmpty(this.folderPath).then(isEmpty => {
           console.log("isEmpty", isEmpty);
           if (!isEmpty) {
-            // console.log("dir to remove", this.folderPath);
-            this.removeDir(this.folderPath);
-            // this.makeDir(this.folderPath);
+            this.removeDir(this.folderPath)
+              .then(() => {
+                this.makeDir(this.folderPath);
+              })
+              .then(
+                () =>
+                  console.log("start walker if not isEmpty") ||
+                  walker(
+                    this.normalizedPathToFolder,
+                    this.saveFile.bind(this),
+                    this.deleteEntryFolder && this.removeDir.bind(this)
+                  ).then(() => {
+                    console.log("finish work");
+                  })
+              );
+          } else {
+            console.log("start walker if isEmpty");
+            walker(
+              this.normalizedPathToFolder,
+              this.saveFile.bind(this),
+              this.deleteEntryFolder && this.removeDir.bind(this)
+            ).then(() => {
+              console.log("finish work");
+            });
           }
         });
       })
       .catch(() => {
         console.log("dir does not exist");
-        this.makeDir(this.folderPath);
+        this.makeDir(this.folderPath).then(
+          () =>
+            console.log("start walker if not exists") ||
+            walker(
+              this.normalizedPathToFolder,
+              this.saveFile.bind(this),
+              this.deleteEntryFolder && this.removeDir.bind(this)
+            ).then(() => {
+              console.log("finish work");
+            })
+        );
       });
-
-    // if (isDirExists) {
-    //   const isOutputFolderEmpty = this.checkIfDirIsEmpty(this.folderPath);
-
-    //   if (!isOutputFolderEmpty) {
-    //     this.removeDir(this.folderPath);
-    //     this.makeDir(this.folderPath);
-    //   }
-    // } else {
-    //   this.makeDir(this.folderPath);
-    // }
-
-    // walker(this.normalizedPathToFolder, this.saveFile.bind(this)).then(() => {
-    //   console.log("finish");
-    // });
   }
 
   checkIfDirExists(dirPath) {
@@ -69,7 +85,7 @@ class HomeWorker {
   }
 
   readFile(filePath) {
-    return fs.readFileSync(filePath);
+    return readFile(filePath);
   }
 
   writeFile(filePath, content) {
@@ -81,86 +97,65 @@ class HomeWorker {
   }
 
   removeDir(dirPath) {
-    walker(dirPath, this.removeFiles.bind(this), this.removeFolders.bind(this))
+    return walker(
+      dirPath,
+      this.removeFile.bind(this),
+      this.removeFolder.bind(this)
+    )
       .then(filePath => console.log("delete done"))
       .catch(error => console.log("error in walker", error));
-
-    // if (isDirExists) {
-    //   fs.readdirSync(dirPath).forEach(item => {
-    //     const filePath = path.join(dirPath, item);
-
-    //     if (fs.lstatSync(filePath).isDirectory()) {
-    //       this.removeDir(filePath);
-    //     } else {
-    //       fs.unlinkSync(filePath);
-    //     }
-    //   });
-    //   fs.rmdirSync(dirPath);
-    // }
   }
 
-  removeFiles(pathToFile) {
-    console.log("check pathToFile", pathToFile);
+  removeFile(pathToFile) {
+    console.log("check removeFile", path.basename(pathToFile));
     return unlink(pathToFile);
-
-    // });
-    // console.log("filePath", filePath);
-    // return lstat(filePath).then(statFile => {
-    //   console.log("isDirectory", statFile.isDirectory());
-    //   statFile.isDirectory() ? rmdir(filePath) : unlink(filePath);
-    // });
-
-    // console.log("to delete", filePath);
-    // return unlink(filePath).then();
-    // });
   }
 
-  removeFolders(pathToFolder) {
-    console.log("check removeFolders", pathToFolder);
+  removeFolder(pathToFolder) {
+    console.log("check removeFolder", path.basename(pathToFolder));
     return rmdir(pathToFolder);
-
-    // readdir(pathToFolders).forEach(item => {
-    //   const folderPath = path.join(dirPath, item);
-
-    //   if (fs.lstatSync(folderPath).isDirectory()) {
-    //     this.removeDir(folderPath);
-    //   }
-    // });
-    // fs.rmdirSync(dirPath);
   }
 
   saveFile(filePath) {
-    return new Promise(resolve => {
-      const itemFullName = path.basename(filePath);
-      const firstItemUpperCaseLetter = itemFullName[0].toUpperCase();
-      const itemContent = this.readFile(filePath);
-      const dirPathForItem = path.join(
-        this.folderPath,
-        "/",
-        firstItemUpperCaseLetter
+    const itemFullName = path.basename(filePath);
+    const firstItemUpperCaseLetter = itemFullName[0].toUpperCase();
+    const dirPathForItem = path.join(
+      this.folderPath,
+      "/",
+      firstItemUpperCaseLetter
+    );
+    return this.readFile(filePath)
+      .then(dirPathForItem => {
+        return this.checkIfDirExists(dirPathForItem);
+      })
+      .then(
+        isDirExists => {
+          this.readFile(filePath)
+            .then(() => {
+              return this.readFile(filePath);
+            })
+            .then(itemContent => {
+              this.writeFile(
+                path.join(dirPathForItem, "/", itemFullName),
+                itemContent
+              );
+            });
+        },
+        () => {
+          this.makeDir(dirPathForItem)
+            .catch(error => error)
+            .then(() => {
+              return this.readFile(filePath);
+            })
+            .then(itemContent => {
+              this.writeFile(
+                path.join(dirPathForItem, "/", itemFullName),
+                itemContent
+              );
+            })
+            .catch(error => console.log("ERR", error));
+        }
       );
-      const isDirExists = this.checkIfDirExists(dirPathForItem);
-
-      if (isDirExists) {
-        this.writeFile(
-          path.join(dirPathForItem, "/", itemFullName),
-          itemContent
-        );
-      } else {
-        this.makeDir(dirPathForItem, () => {
-          this.writeFile(
-            path.join(dirPathForItem, "/", itemFullName),
-            itemContent
-          );
-        });
-      }
-
-      if (this.deleteEntryFolder) {
-        fs.unlinkSync(filePath);
-      }
-
-      resolve();
-    });
   }
 }
 
