@@ -1,7 +1,18 @@
+const { checkUser } = require("../../models/user");
+
 const loginPostController = (req, res) => {
   console.log("login post", req.body);
+  const { body: { email = "", password = "" } = {} } = req;
+  if (email && password) {
+    const isValidUser = checkUser(email, password);
 
-  res.render("login");
+    if (isValidUser) {
+      req.session.validUser = true;
+      res.redirect("index");
+    } else {
+      res.render("login", { msglogin: "not valid" });
+    }
+  }
 };
 
 const loginGetController = (req, res) => {

@@ -20,21 +20,22 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(
+  session({
+    secret: process.env.SECRET,
+    key: "sessionkey",
+    cookie: {
+      path: "/",
+      httpOnly: true,
+      maxAge: null
+    },
+    saveUninitialized: false,
+    resave: false
+  })
+);
 app.use(express.static(path.join(__dirname, "public")));
-// app.use(
-//   session({
-//     secret: process.env.SECRET,
-//     key: "sessionkey",
-//     cookie: {
-//       path: "/",
-//       httpOnly: true,
-//       maxAge: "10000"
-//     },
-//     saveUninitialized: false,
-//     resave: false
-//   })
-// );
 
+// routes
 app.use("/", mainRouter);
 
 // catch 404 and forward to error handler
