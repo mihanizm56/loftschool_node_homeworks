@@ -24,96 +24,55 @@ class HomeWorker {
   }
 
   init() {
-    this.checkIfDirExists(this.folderPath)
+    access(this.pathToRead)
       .then(() => {
-        console.log("dir exists");
-        this.checkIfDirIsEmpty(this.folderPath).then(isEmpty => {
-          console.log("isEmpty", isEmpty);
-          if (!isEmpty) {
-            this.removeDir(this.folderPath)
-              .then(() => {
-                this.makeDir(this.folderPath);
-              })
-              .then(
-                () =>
-                  console.log("start walker if not isEmpty") ||
-                  walker(
-                    this.normalizedPathToFolder,
-                    this.saveFile.bind(this),
-                    this.deleteEntryFolder && this.removeDir.bind(this)
-                  ).then(() => {
-                    console.log("finish work");
-                  })
-              );
-          } else {
-            console.log("start walker if isEmpty");
-            walker(
-              this.normalizedPathToFolder,
-              this.saveFile.bind(this),
-              this.deleteEntryFolder && this.removeDir.bind(this)
-            ).then(() => {
-              console.log("finish work");
+        return access(this.folderPath)
+          .then(() => {
+            console.log("dir exists");
+            this.checkIfDirIsEmpty(this.folderPath).then(isEmpty => {
+              console.log("isEmpty", isEmpty);
+              if (!isEmpty) {
+                this.removeDirRecursive(this.folderPath)
+                  .then(() => mkdir(this.folderPath))
+                  .then(() => {
+                    console.log("start walker if not isEmpty");
+                    this.walkToSaveFiles();
+                  });
+              } else {
+                console.log("start walker if isEmpty");
+                this.walkToSaveFiles();
+              }
             });
-          }
-        });
+          })
+          .catch(() => {
+            console.log("dir does not exist");
+            mkdir(this.folderPath).then(() => {
+              console.log("start walker if not exists");
+              this.walkToSaveFiles();
+            });
+          });
       })
-      .catch(() => {
-        console.log("dir does not exist");
-        this.makeDir(this.folderPath).then(
-          () =>
-            console.log("start walker if not exists") ||
-            walker(
-              this.normalizedPathToFolder,
-              this.saveFile.bind(this),
-              this.deleteEntryFolder && this.removeDir.bind(this)
-            ).then(() => {
-              console.log("finish work");
-            })
-        );
-      });
+      .catch(error => console.log("input folder doesnt exists"));
   }
 
-  checkIfDirExists(dirPath) {
-    return access(dirPath);
-  }
-
-  checkIfDirIsEmpty(dirPath) {
-    return readdir(dirPath).then(arrayOfFiles => {
-      const isDirEmpty = !Boolean(arrayOfFiles.length);
-      return isDirEmpty;
+  walkToSaveFiles() {
+    return walker(
+      this.normalizedPathToFolder,
+      this.saveFile.bind(this),
+      this.deleteEntryFolder && this.removeDirRecursive.bind(this)
+    ).then(() => {
+      console.log("finish work");
     });
   }
 
-  readFile(filePath) {
-    return readFile(filePath);
+  checkIfDirIsEmpty(dirPath) {
+    return readdir(dirPath).then(arrayOfFiles => !Boolean(arrayOfFiles.length));
   }
 
-  writeFile(filePath, content) {
-    return writeFile(filePath, content);
-  }
-
-  makeDir(pathDir) {
-    return mkdir(pathDir);
-  }
-
-  removeDir(dirPath) {
-    return walker(
-      dirPath,
-      this.removeFile.bind(this),
-      this.removeFolder.bind(this)
-    )
+  removeDirRecursive(dirPath) {
+    return walker(dirPath, unlink, rmdir)
       .then(filePath => console.log("delete done"))
       .catch(error => console.log("error in walker", error));
-  }
-
-  removeFile(pathToFile) {
-    console.log("check removeFile", path.basename(pathToFile));
-    return unlink(pathToFile);
-  }
-
-  removeFolder(pathToFolder) {
-    console.log("check removeFolder", path.basename(pathToFolder));
-    return rmdir(pathToFolder);
   }
 
   saveFile(filePath) {
@@ -124,38 +83,24 @@ class HomeWorker {
       "/",
       firstItemUpperCaseLetter
     );
-    return this.readFile(filePath)
-      .then(dirPathForItem => {
-        return this.checkIfDirExists(dirPathForItem);
+
+    return access(dirPathForItem)
+      .then(isDirExists => {
+        readFile(filePath).then(itemContent => {
+          writeFile(path.join(dirPathForItem, "/", itemFullName), itemContent);
+        });
       })
-      .then(
-        isDirExists => {
-          this.readFile(filePath)
-            .then(() => {
-              return this.readFile(filePath);
-            })
-            .then(itemContent => {
-              this.writeFile(
-                path.join(dirPathForItem, "/", itemFullName),
-                itemContent
-              );
-            });
-        },
-        () => {
-          this.makeDir(dirPathForItem)
-            .catch(error => error)
-            .then(() => {
-              return this.readFile(filePath);
-            })
-            .then(itemContent => {
-              this.writeFile(
-                path.join(dirPathForItem, "/", itemFullName),
-                itemContent
-              );
-            })
-            .catch(error => console.log("ERR", error));
-        }
-      );
+      .catch(() => {
+        mkdir(dirPathForItem)
+          .then(() => readFile(filePath))
+          .then(itemContent => {
+            writeFile(
+              path.join(dirPathForItem, "/", itemFullName),
+              itemContent
+            );
+          })
+          .catch(error => console.log("ERR", error));
+      });
   }
 }
 
