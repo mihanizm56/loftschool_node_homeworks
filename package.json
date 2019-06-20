@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "copy_from_client_bundle": "cd scripts/copier && node interface",
+    "copy": "cd scripts/copier && node interface",
     "build:client": "cd client && npm run build",
     "server": "cd server && npm start",
     "client": "cd client && npm start",
-    "start": "npm run build:client && npm run copy_from_client_bundle && npm run server",
+    "start": "npm run build:client && npm run copy && npm run server",
     "install:server": "cd server && npm i",
     "install:client": "cd client && npm i",
-    "install:all": "npm run install:server && npm run install:client && npm i"
+    "install:all": "npm run install:server && npm run install:client"
   },
   "repository": {
     "type": "git",
