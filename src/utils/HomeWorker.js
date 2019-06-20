@@ -81,11 +81,9 @@ class HomeWorker {
   }
 
   removeDir(dirPath) {
-    walker(
-      dirPath,
-      this.removeFiles.bind(this),
-      this.removeFolders.bind(this)
-    ).then(filePath => console.log("delete done"));
+    walker(dirPath, this.removeFiles.bind(this), this.removeFolders.bind(this))
+      .then(filePath => console.log("delete done"))
+      .catch(error => console.log("error in walker", error));
 
     // if (isDirExists) {
     //   fs.readdirSync(dirPath).forEach(item => {

@@ -11,11 +11,12 @@ const walker = (dir, callbackOnFile, callBackOnFolder) => {
         let filePath = list[i++];
 
         if (!filePath) {
-          return callBackOnFolder
-            ? callBackOnFolder(dir)
-                .then(() => res(null))
-                .catch(rej)
-            : res(null);
+          console.log("////////////////", dir, callBackOnFolder);
+          // return callBackOnFolder
+          //   ? callBackOnFolder(dir)
+          //       .then(() => res(null))
+          //       .catch(rej)
+          return res(null);
         }
 
         filePath = path.join(dir, filePath);
