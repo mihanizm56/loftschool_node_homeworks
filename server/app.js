@@ -1,8 +1,12 @@
+// add the config of .env variables
+require("dotenv").config();
+
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const session = require("express-session");
 
 const mainRouter = require("./routes/root");
 
@@ -17,6 +21,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+// app.use(
+//   session({
+//     secret: process.env.SECRET,
+//     key: "sessionkey",
+//     cookie: {
+//       path: "/",
+//       httpOnly: true,
+//       maxAge: "10000"
+//     },
+//     saveUninitialized: false,
+//     resave: false
+//   })
+// );
 
 app.use("/", mainRouter);
 
