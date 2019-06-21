@@ -39,6 +39,7 @@ const dirForServerTemplates = path.join(
   "..",
   "..",
   "server",
+  "src",
   "views"
 );
 
