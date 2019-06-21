@@ -8,8 +8,8 @@ const {
   rmdir,
   unlink,
   stat
-} = require("fs");
-const { promisify } = require("util");
+} = require('fs');
+const { promisify } = require('util');
 
 module.exports.access = promisify(access);
 module.exports.readdir = promisify(readdir);

@@ -1,10 +1,10 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const walker = (dir, callbackOnFile, callBackOnFolder) => {
-  return new Promise((res, rej) => {
+  return new Promise((resolve, reject) => {
     fs.readdir(dir, (err, list) => {
-      if (err) return rej(err);
+      if (err) return reject(err);
       let i = 0;
 
       const next = () => {
@@ -13,26 +13,26 @@ const walker = (dir, callbackOnFile, callBackOnFolder) => {
         if (!filePath) {
           if (callBackOnFolder) {
             return callBackOnFolder(dir)
-              .then(() => res(null))
-              .catch(rej);
+              .then(() => resolve(null))
+              .catch(reject);
           } else {
-            return res(null);
+            return resolve(null);
           }
         }
 
         filePath = path.join(dir, filePath);
 
         fs.stat(filePath, (err, stat) => {
-          if (err) return rej(err);
+          if (err) return reject(err);
 
           if (stat && stat.isDirectory()) {
             walker(filePath, callbackOnFile, callBackOnFolder)
               .then(() => next())
-              .catch(rej);
+              .catch(reject);
           } else {
             callbackOnFile(filePath)
               .then(() => next())
-              .catch(rej);
+              .catch(reject);
           }
         });
       };
