@@ -10,14 +10,12 @@ const post = (req, res) => {
           req.session.validUser = true;
           res.status(200).redirect("index");
         } else {
-          res
-            .status(401)
-            .render("login", { msgslogin: true, msglogin: "not valid" });
+          res.status(401).render("login", { msglogin: "not valid" });
         }
       }
     );
   } else {
-    res.status(401).render("login", { msgslogin: true, msglogin: "not valid" });
+    res.status(401).render("login", { msglogin: "not valid" });
   }
 };
 
