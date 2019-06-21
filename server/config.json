@@ -1,0 +1,14 @@
+{
+  "mail": {
+    "subject": "Сообщение с сайта",
+    "stmp": {
+      "host": "smtp.gmail.com",
+      "port": "465",
+      "secure": "true",
+      "auth": {
+        "user": "m727507.5656@gmail.com",
+        "pass": "89686576017"
+      }
+    }
+  }
+}
