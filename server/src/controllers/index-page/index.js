@@ -1,6 +1,7 @@
-const indexController = (req, res) => {
-  // console.log("index get");
-  res.render("index");
+const get = (req, res) => {
+  res.status(200).render("index");
 };
 
-module.exports.indexController = indexController;
+module.exports = {
+  get
+};

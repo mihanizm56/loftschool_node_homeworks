@@ -1,6 +1,6 @@
 const db = require("../../models/db/db")();
 
-const loginPostController = (req, res) => {
+const post = (req, res) => {
   console.log("login post", req.body);
   const { body: { email = "", password = "" } = {} } = req;
   if (email && password) {
@@ -21,11 +21,13 @@ const loginPostController = (req, res) => {
   }
 };
 
-const loginGetController = (req, res) => {
+const get = (req, res) => {
   console.log("login get");
 
   res.render("login");
 };
 
-module.exports.loginPostController = loginPostController;
-module.exports.loginGetController = loginGetController;
+module.exports = {
+  post,
+  get
+};
