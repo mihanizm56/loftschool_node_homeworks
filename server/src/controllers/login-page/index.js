@@ -1,26 +1,23 @@
-const low = require("lowdb");
-const FileAsync = require("lowdb/adapters/FileAsync");
-const { checkUser } = require("../../services/db/user");
-
-const adapter = new FileAsync("db.json");
-const db = low(adapter);
+const db = require("../../models/db/db")();
 
 const loginPostController = (req, res) => {
   console.log("login post", req.body);
   const { body: { email = "", password = "" } = {} } = req;
   if (email && password) {
-    console.log("123");
-    db.get("user").then(userData => {
-      console.log("userData", userData);
-    });
-    //   console.log("isValidUser", email, password, isValidUser);
-    //   if (isValidUser) {
-    //     req.session.validUser = true;
-    //     res.redirect("index");
-    //   } else {
-    //     res.render("login", { msglogin: "not valid" });
-    //   }
-    // }
+    Promise.resolve(db.get("user")).then(
+      ({ email: userEmail, password: userPassword }) => {
+        if (email === userEmail && password === userPassword) {
+          req.session.validUser = true;
+          res.status(200).redirect("index");
+        } else {
+          res
+            .status(401)
+            .render("login", { msgslogin: true, msglogin: "not valid" });
+        }
+      }
+    );
+  } else {
+    res.status(401).render("login", { msgslogin: true, msglogin: "not valid" });
   }
 };
 
