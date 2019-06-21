@@ -9,7 +9,7 @@ const mainRouter = require("./routes/root");
 const app = express();
 
 // view engine setup
-app.set("views", path.join(__dirname, "views",'pages'));
+app.set("views", path.join(__dirname, "views", "pages"));
 app.set("view engine", "pug");
 
 app.use(logger("dev"));

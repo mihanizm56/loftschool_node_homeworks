@@ -23,10 +23,17 @@ const dirForClientTemplates = path.join(
 );
 
 /// dirs to server
-const dirForServerAssets = path.join(__dirname, "..", "..", "server", "public");
-const dirForServerJS = path.join(dirForServerAssets, "javascripts");
-const dirForServerCSS = path.join(dirForServerAssets, "stylesheets");
-const dirForServerImages = path.join(dirForServerAssets, "images");
+const dirForServerAssets = path.join(
+  __dirname,
+  "..",
+  "..",
+  "server",
+  "public",
+  "assets"
+);
+const dirForServerJS = path.join(dirForServerAssets, "js");
+const dirForServerCSS = path.join(dirForServerAssets, "css");
+const dirForServerImages = path.join(dirForServerAssets, "img");
 const dirForServerTemplates = path.join(
   __dirname,
   "..",
