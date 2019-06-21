@@ -1,4 +1,3 @@
-const fs = require("fs");
 const path = require("path");
 const { walker } = require("./walker");
 const {
@@ -7,9 +6,7 @@ const {
   readFile,
   writeFile,
   mkdir,
-  lstat,
   rmdir,
-  stat,
   unlink
 } = require("./onPromises");
 
