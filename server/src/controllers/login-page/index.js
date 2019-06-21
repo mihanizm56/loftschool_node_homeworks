@@ -1,4 +1,4 @@
-const { checkUser } = require("../../models/user");
+const { checkUser } = require("../../services/db/user");
 
 const loginPostController = (req, res) => {
   console.log("login post", req.body);
