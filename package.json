@@ -1,45 +1,26 @@
 {
-  "name": "loft_node",
+  "name": "nodejs-hw34",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "check": "node src/ --entry ./bar --output ./foo",
-    "lint": "eslint src/",
-    "stop": "taskkill /F /IM node.exe"
+    "copy_from_client_bundle": "cd scripts/copier && node interface",
+    "build:client": "cd client && npm run build",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "start": "npm run build:client && npm run copy_from_client_bundle && npm run server",
+    "install:server": "cd server && npm i",
+    "install:client": "cd client && npm i",
+    "install:all": "npm run install:server && npm run install:client && npm i"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mihanizm56/loftschool_node_homeworks.git"
+    "url": "git+https://github.com/mihanizm56/loft_node_3.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mihanizm56/loftschool_node_homeworks/issues"
+    "url": "https://github.com/mihanizm56/loft_node_3/issues"
   },
-  "homepage": "https://github.com/mihanizm56/loftschool_node_homeworks#readme",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "cross-env": "^5.2.0",
-    "crypto": "^1.0.1",
-    "dotenv": "^8.0.0",
-    "express": "^4.16.4",
-    "fs-extra": "^8.0.1",
-    "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.11",
-    "moment": "^2.24.0",
-    "mongoose": "^5.5.12",
-    "ramda": "^0.26.1",
-    "uuid": "^3.3.2",
-    "yargs": "^13.2.4"
-  },
-  "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0"
-  }
+  "homepage": "https://github.com/mihanizm56/loft_node_3#readme"
 }
