@@ -5,10 +5,10 @@ const post = (req, res) => {
   const { body: { email = "", password = "" } = {} } = req;
   if (email && password) {
     Promise.resolve(db.get("user")).then(
-      ({ email: userEmail, password: userPassword }) => {
+      ({ credentials: { email: userEmail, password: userPassword } }) => {
         if (email === userEmail && password === userPassword) {
           req.session.validUser = true;
-          res.status(200).redirect("index");
+          res.status(200).redirect("/admin");
         } else {
           res.status(401).render("login", { msglogin: "not valid" });
         }
