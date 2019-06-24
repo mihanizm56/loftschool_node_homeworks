@@ -5,22 +5,11 @@
       "password": "1"
     },
     "skills": {
-      "Возраст начала занятий на скрипке": "5",
-      "Концертов отыграл": "1",
-      "Максимальное число городов в туре": "4",
-      "Лет на сцене в качестве скрипача": "1"
+      "age": "5",
+      "concerts": "1",
+      "cities": "4",
+      "years": "1"
     },
-    "products": [
-      {
-        "name": "Миша",
-        "price": "1 000",
-        "src": "\\assets\\img\\products\\ZjOzU9e_azY.jpg"
-      },
-      {
-        "name": "Миша",
-        "price": "1 000",
-        "src": "\\assets\\img\\products\\Image from iOS.jpg"
-      }
-    ]
+    "products": []
   }
 }

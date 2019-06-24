@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const { adminMiddleware } = require("../../middlewares/auth-login");
 
-const indexPageRouter = require("./index-page");
-const loginPageRouter = require("./login-page");
-const adminPageRouter = require("./admin-page");
-const adminMiddleware = require("../middlewares/auth-login");
+const ctrlAdmin = require("../../controllers/admin-page");
+const ctrlIndex = require("../../controllers/index-page");
+const ctrlLogin = require("../../controllers/login-page");
 
-const senderMessage = require("../controllers/mail-sender");
-
-router.use("/mail", senderMessage);
-router.use("/index", indexPageRouter);
-router.use("/login", loginPageRouter);
-router.use("/admin", adminMiddleware, adminPageRouter);
+router.get("/admin", ctrlAdmin.get);
+router.post("/admin/skills", ctrlAdmin.skills);
+router.post("/admin/upload", ctrlAdmin.upload);
+router.get("/index", ctrlIndex.get);
+router.get("/login", ctrlLogin.get);
+router.post("/login", ctrlLogin.post);
 
 module.exports = router;
