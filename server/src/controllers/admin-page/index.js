@@ -42,11 +42,11 @@ const skills = (req, res) => {
 
 const upload = (req, res, next) => {
   const form = new formidable.IncomingForm();
-  const pathToPhotos = path.join(process.cwd(), "public", "assets", "img");
+  const upload = path.join("public", "assets", "img", "products");
 
-  form.uploadDir = path.join(pathToPhotos);
+  form.uploadDir = path.join(process.cwd(), upload);
 
-  fs.access(pathToPhotos, error => error && fs.mkdir(pathToPhotos));
+  fs.access(upload, error => error && fs.mkdir(upload));
 
   form.parse(req, (error, fields, files) => {
     if (error) {
@@ -56,9 +56,9 @@ const upload = (req, res, next) => {
       });
     }
 
-    const fileName = path.join(pathToPhotos, files.photo.name);
     const valid = photoValidation(fields, files);
-    const dir = fileName.substr(fileName.indexOf("\\"));
+    const fileName = path.join(upload, files.photo.name);
+    const filePathInDb = fileName.substr(fileName.indexOf("\\"));
     const { name, price } = fields;
 
     if (valid.err) {
@@ -77,8 +77,8 @@ const upload = (req, res, next) => {
 
       console.log("fields", fields);
       Promise.resolve(db.get("user"))
-        .then(({ goods }) => {
-          goods.push({ name, price, src: files.photo.name });
+        .then(({ products }) => {
+          products.push({ name, price, src: filePathInDb });
           db.save();
           res.status(200).render("admin", { msgfile: "Товар добавлен!" });
         })
