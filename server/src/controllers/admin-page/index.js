@@ -42,7 +42,7 @@ const skills = (req, res) => {
 
 const upload = (req, res, next) => {
   const form = new formidable.IncomingForm();
-  const pathToPhotos = path.join(process.cwd(), "public", "upload");
+  const pathToPhotos = path.join(process.cwd(), "public", "assets", "img");
 
   form.uploadDir = path.join(pathToPhotos);
 
