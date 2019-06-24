@@ -41,50 +41,56 @@ const skills = (req, res) => {
 };
 
 const upload = (req, res, next) => {
-  console.log("1");
   const form = new formidable.IncomingForm();
-  console.log("2");
   const pathToPhotos = path.join(process.cwd(), "public", "upload");
-  console.log("3");
-  fs.access(pathToPhotos, error => error && fs.mkdir(pathToPhotos));
-  console.log("4");
+
   form.uploadDir = path.join(pathToPhotos);
-  console.log("5");
+
+  fs.access(pathToPhotos, error => error && fs.mkdir(pathToPhotos));
+
   form.parse(req, (error, fields, files) => {
-    console.log("6");
     if (error) {
       console.log("error", error);
-      return next(error);
+      return fs.unlink(files.photo.path, () => {
+        next(error);
+      });
     }
 
-    console.log("fields", fields);
-    console.log("files", files);
+    const fileName = path.join(pathToPhotos, files.photo.name);
+    const valid = photoValidation(fields, files);
+    const dir = fileName.substr(fileName.indexOf("\\"));
+    const { name, price } = fields;
+
+    if (valid.err) {
+      return fs.unlink(files.photo.path, () => {
+        res
+          .status(403)
+          .render("admin", { msgfile: "Выберите корректные данные!" });
+      });
+    }
+
+    fs.rename(files.photo.path, fileName, err => {
+      if (err) {
+        console.log("error in rename", error);
+        return;
+      }
+
+      console.log("fields", fields);
+      Promise.resolve(db.get("user"))
+        .then(({ goods }) => {
+          goods.push({ name, price, src: files.photo.name });
+          db.save();
+          res.status(200).render("admin", { msgfile: "Товар добавлен!" });
+        })
+        .catch(error => {
+          console.log("get an error", error);
+          res
+            .status(500)
+            .render("admin", { msgfile: "Произошла ошибка на сервере!" });
+        });
+    });
   });
 };
-console.log("7");
-// const upload = (req, res) => {
-//   const { body: { name, price, photo } = {} } = req;
-//   console.log("check request", name, price, photo);
-//   if ((name, price, photo)) {
-//     console.log("data skills valid");
-//     Promise.resolve(db.get("user"))
-//       .then(({ goods }) => {
-//         goods.push({ name, price, photo });
-//         db.save();
-//         res.status(200).render("admin", { msgfile: "Товар добавлен!" });
-//       })
-//       .catch(error => {
-//         console.log("get an error");
-//         res
-//           .status(500)
-//           .render("admin", { msgskill: "Произошла ошибка на сервере!" });
-//       });
-//   } else {
-//     res
-//       .status(403)
-//       .render("admin", { msgemail: "Выберите корректные данные!" });
-//   }
-// };
 
 module.exports = {
   get,
