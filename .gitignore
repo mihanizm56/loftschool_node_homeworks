@@ -35,7 +35,6 @@ Thumbs.db
 bower_components
 dist
 build
-public
 
 # Files to ignore
 package-lock.json
