@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/mihanizm56/loft_node_3/issues"
   },
-  "homepage": "https://github.com/mihanizm56/loft_node_3#readme"
+  "homepage": "https://github.com/mihanizm56/loft_node_3#readme",
+  "dependencies": {
+    "mkdirp": "^0.5.1"
+  }
 }

@@ -3,12 +3,12 @@ const {
   readdir,
   readFile,
   writeFile,
-  mkdir,
   lstat,
   rmdir,
   unlink,
   stat
 } = require("fs");
+const mkdir = require("mkdirp");
 const { promisify } = require("util");
 
 module.exports.access = promisify(access);

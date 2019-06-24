@@ -17,9 +17,9 @@ class Copier {
   }
 
   init() {
-    const arrayOfPromises = this.arrayToCopy.map(pathsPair => {
-      return this.copyMethod(pathsPair);
-    });
+    const arrayOfPromises = this.arrayToCopy.map(pathsPair =>
+      this.copyMethod(pathsPair)
+    );
 
     Promise.all(arrayOfPromises).then(() => console.log("copied"));
   }
@@ -27,18 +27,11 @@ class Copier {
   copyMethod({ from, to }) {
     return access(from)
       .then(() =>
-        access(to)
-          .catch(
-            error =>
-              console.log("get error in to path, made new one") || mkdir(to)
-          )
-          .then(isEmpty => {
-            this.copyPaste(from, to);
-          })
+        mkdir(to)
+          .then(() => this.copyPaste(from, to))
+          .catch(error => console.log("error", error))
       )
-      .catch(() =>
-        console.log("no INPUT path, please choose the rigth path from copy to")
-      );
+      .catch(error => console.log("get error in to path, made new one", error));
   }
 
   copyPaste(from, to) {
