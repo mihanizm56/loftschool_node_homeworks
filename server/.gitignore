@@ -35,9 +35,7 @@ Thumbs.db
 bower_components
 dist
 build
-public/assets/css
-public/assets/js
-public/assets/img
+public
 
 # Files to ignore
 package-lock.json
@@ -45,4 +43,3 @@ package-lock.json
 # Node.JS
 node_modules
 npm-debug.log
-
