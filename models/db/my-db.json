@@ -4,12 +4,12 @@
       "email": "m727507.56@mail.ru",
       "password": "1"
     },
+    "products": [],
     "skills": {
-      "age": "5",
-      "concerts": "1",
-      "cities": "4",
+      "age": "30",
+      "concerts": "20",
+      "cities": "10",
       "years": "1"
-    },
-    "products": []
+    }
   }
 }

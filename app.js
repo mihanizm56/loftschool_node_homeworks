@@ -1,5 +1,7 @@
 // add the config of .env variables
 require("dotenv").config();
+require("./services/event-emitter");
+require("./services/db");
 
 const createError = require("http-errors");
 const express = require("express");
@@ -8,14 +10,11 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const session = require("express-session");
 const bodyParser = require("body-parser");
-// const flash = require("connect-flash");
-
-const mainRouter = require("./src/routes/root");
-
+const router = require("./routes");
 const app = express();
 
 // view engine setup
-app.set("views", path.join(__dirname, "src", "views", "pages"));
+app.set("views", path.join(__dirname, "views", "pages"));
 app.set("view engine", "pug");
 
 app.use(logger("dev"));
@@ -39,7 +38,7 @@ app.use(
 app.use(express.static(path.join(__dirname, "public")));
 
 // routes
-app.use("/", mainRouter);
+app.use("/", router);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

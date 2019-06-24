@@ -1,12 +1,12 @@
-const db = require("../../models/db/db")();
+const DATABASE = global.DATABASE;
 
 const get = (req, res) => {
-  Promise.resolve(db.get("user"))
+  DATABASE.emit("index/get", {})
     .then(({ skills, products }) => {
-      console.log("products", products);
+      console.log("////////", skills, products);
       res.status(200).render("index", { skills, products });
     })
-    .catch(error => res.status(500).send());
+    .catch(error => res.status(500).render("index"));
 };
 
 module.exports = {
