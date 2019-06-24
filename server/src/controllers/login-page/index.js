@@ -6,6 +6,7 @@ const post = (req, res) => {
   if (email && password) {
     Promise.resolve(db.get("user")).then(
       ({ credentials: { email: userEmail, password: userPassword } }) => {
+        console.log("db credentials", userEmail, userPassword);
         if (email === userEmail && password === userPassword) {
           req.session.validUser = true;
           res.status(200).redirect("/admin");
@@ -20,8 +21,6 @@ const post = (req, res) => {
 };
 
 const get = (req, res) => {
-  console.log("login get");
-
   res.render("login");
 };
 
