@@ -12,7 +12,7 @@
     "start": "npm run client:build && npm run copy && npm run server:prod",
     "install:server": "cd server && npm i",
     "install:client": "cd client && npm i",
-    "install:all": "npm run install:server && npm run install:client"
+    "install:all": "npm run install:server && npm run install:client && npm i"
   },
   "repository": {
     "type": "git",
