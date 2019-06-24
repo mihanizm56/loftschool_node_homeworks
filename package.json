@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "copy": "cd scripts/copier && node interface",
-    "build:client": "cd client && npm run build",
-    "server": "cd server && npm start",
+    "client:build": "cd client && npm run build",
+    "server:prod": "cd server && npm start",
     "server:dev": "cd server && npm run dev",
     "client": "cd client && npm start",
-    "start": "npm run build:client && npm run copy && npm run server",
+    "start": "npm run client:build && npm run copy && npm run server:prod",
     "install:server": "cd server && npm i",
     "install:client": "cd client && npm i",
     "install:all": "npm run install:server && npm run install:client"
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/mihanizm56/loft_node_3#readme",
   "dependencies": {
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "nodemon": "^1.19.1"
   }
 }
