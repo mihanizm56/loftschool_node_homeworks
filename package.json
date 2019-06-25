@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "stop": "taskkill /F /IM node.exe"
   },
   "dependencies": {
     "@nauma/eventemitter": "^1.0.7",
@@ -15,6 +16,7 @@
     "formidable": "^1.2.1",
     "http-errors": "~1.6.3",
     "joi": "^14.3.1",
+    "mkdirp": "^0.5.1",
     "morgan": "~1.9.1",
     "nconf": "^0.10.0",
     "nodemailer": "^6.2.1",

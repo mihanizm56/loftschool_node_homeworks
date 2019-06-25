@@ -4,7 +4,13 @@
       "email": "m727507.56@mail.ru",
       "password": "1"
     },
-    "products": [],
+    "products": [
+      {
+        "name": "Михаил",
+        "price": "1 000",
+        "src": "\\assets\\img\\products\\1234.PNG"
+      }
+    ],
     "skills": {
       "age": "30",
       "concerts": "20",

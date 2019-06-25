@@ -1,7 +1,16 @@
 const formidable = require("formidable");
-const fs = require("fs");
 const path = require("path");
-// const db = require("../../models/db")();
+const {
+  access,
+  readdir,
+  readFile,
+  writeFile,
+  lstat,
+  rmdir,
+  unlink,
+  stat,
+  rename
+} = require("../../services/promise-fs");
 const { photoValidation } = require("../../services/validation");
 const DATABASE = global.DATABASE;
 
@@ -11,14 +20,12 @@ const get = (req, res) => {
 
 const skills = (req, res) => {
   const { body } = req;
-  console.log("before emit", req.body);
 
   DATABASE.emit("skills/post", body)
     .then(() => {
       res.status(200).render("admin", { msgskill: "Ваши данные обновлены!" });
     })
     .catch(error => {
-      console.log("error", error);
       res
         .status(500)
         .render("admin", { msgskill: "Произошла ошибка на сервере!" });
@@ -31,50 +38,52 @@ const upload = (req, res, next) => {
 
   form.uploadDir = path.join(process.cwd(), upload);
 
-  fs.access(upload, error => error && fs.mkdir(upload));
+  access(path.join(process.cwd(), upload))
+    .catch(error => console.log("error", error) || mkdir(upload))
+    .then(() => {
+      form.parse(req, (error, fields, files) => {
+        if (error) {
+          files.photo && unlink(files.photo.path).catch(error => next(error));
 
-  form.parse(req, (error, fields, files) => {
-    if (error) {
-      console.log("error", error);
-      return fs.unlink(files.photo.path, () => {
-        next(error);
-      });
-    }
-
-    const valid = photoValidation(fields, files);
-    const fileName = path.join(upload, files.photo.name);
-    const filePathInDb = fileName.substr(fileName.indexOf("\\"));
-    const { name, price } = fields;
-
-    if (valid.err) {
-      return fs.unlink(files.photo.path, () => {
-        res
-          .status(403)
-          .render("admin", { msgfile: "Выберите корректные данные!" });
-      });
-    }
-
-    fs.rename(files.photo.path, fileName, err => {
-      if (err) {
-        console.log("error in rename", error);
-        return;
-      }
-
-      console.log("fields", fields);
-      Promise.resolve(db.get("user"))
-        .then(({ products }) => {
-          products.push({ name, price, src: filePathInDb });
-          db.save();
-          res.status(200).render("admin", { msgfile: "Товар добавлен!" });
-        })
-        .catch(error => {
-          console.log("get an error", error);
-          res
+          return res
             .status(500)
             .render("admin", { msgfile: "Произошла ошибка на сервере!" });
+        }
+
+        const valid = photoValidation(fields, files);
+        const fileName = path.join(upload, files.photo.name);
+        const filePathInDb = path.normalize(
+          fileName.substr(fileName.indexOf("\\"))
+        );
+        const { name, price } = fields;
+
+        if (valid.err) {
+          return unlink(files.photo.path).then(() => {
+            res
+              .status(403)
+              .render("admin", { msgfile: "Выберите корректные данные!" });
+          });
+        }
+
+        rename(files.photo.path, fileName, err => {
+          if (err) {
+            return res
+              .status(500)
+              .render("admin", { msgfile: "Произошла ошибка на сервере!" });
+          }
+
+          DATABASE.emit("upload/product", { name, price, src: filePathInDb })
+            .then(() => {
+              res.status(200).render("admin", { msgfile: "Товар добавлен!" });
+            })
+            .catch(error =>
+              res
+                .status(500)
+                .render("admin", { msgfile: "Произошла ошибка на сервере!" })
+            );
         });
+      });
     });
-  });
 };
 
 module.exports = {
