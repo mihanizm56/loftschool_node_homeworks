@@ -7,6 +7,7 @@
     "stop": "taskkill /F /IM node.exe"
   },
   "dependencies": {
+    "@hapi/joi": "^15.1.0",
     "@nauma/eventemitter": "^1.0.7",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -15,7 +16,6 @@
     "express-session": "^1.16.2",
     "formidable": "^1.2.1",
     "http-errors": "~1.6.3",
-    "joi": "^14.3.1",
     "mkdirp": "^0.5.1",
     "morgan": "~1.9.1",
     "nconf": "^0.10.0",

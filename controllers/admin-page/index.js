@@ -1,5 +1,6 @@
 const formidable = require("formidable");
 const path = require("path");
+const Joi = require("@hapi/joi");
 const {
   access,
   readdir,
@@ -12,6 +13,8 @@ const {
   rename
 } = require("../../services/promise-fs");
 const { photoValidation } = require("../../services/validation");
+const { skillsSchema } = require("../../models/db/schemas");
+
 const DATABASE = global.DATABASE;
 
 const get = (req, res) => {
@@ -19,15 +22,31 @@ const get = (req, res) => {
 };
 
 const skills = (req, res) => {
-  const { body } = req;
+  const { age, concerts, cities, years } = req.body;
 
-  DATABASE.emit("skills/post", body)
+  Joi.validate(
+    { age: +age, concerts: +concerts, cities: +cities, years: +years },
+    skillsSchema
+  )
     .then(() => {
-      res.status(200).render("admin", { msgskill: "Ваши данные обновлены!" });
+      DATABASE.emit("skills/post", req.body)
+        .then(() => {
+          res
+            .status(200)
+            .render("admin", { msgskill: "Ваши данные обновлены!" });
+        })
+        .catch(error => {
+          console.log("error", error);
+          res
+            .status(500)
+            .render("admin", { msgskill: "Произошла ошибка на сервере!" });
+        });
     })
     .catch(error => {
+      console.log("error", error);
+
       res
-        .status(500)
+        .status(403)
         .render("admin", { msgskill: "Произошла ошибка на сервере!" });
     });
 };
@@ -39,7 +58,9 @@ const upload = (req, res, next) => {
   form.uploadDir = path.join(process.cwd(), upload);
 
   access(path.join(process.cwd(), upload))
-    .catch(error => console.log("error", error) || mkdir(upload))
+    .catch(
+      error => console.log("error", error) || Promise.resolve(mkdir(upload))
+    )
     .then(() => {
       form.parse(req, (error, fields, files) => {
         if (error) {
