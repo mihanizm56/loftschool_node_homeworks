@@ -6,17 +6,16 @@
     },
     "products": [
       {
-        "name": "Михаил",
+        "name": "Миша",
         "price": "1 000",
-        "src": "\\assets\\img\\products\\1234.PNG"
+        "src": "\\assets\\img\\products\\photo-1561583073027.jpg"
       }
     ],
     "skills": {
       "age": "1",
       "concerts": "20",
       "cities": "10",
-      "years": "1",
-      "email": "m727507.56@mail.ru"
+      "years": "1"
     }
   }
 }

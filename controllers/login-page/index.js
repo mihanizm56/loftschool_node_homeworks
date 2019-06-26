@@ -9,7 +9,6 @@ const get = (req, res) => {
 };
 
 const post = (req, res) => {
-  console.log("login post", req.body);
   const { body: { email, password } = {} } = req;
 
   return Joi.validate({ email, password }, userSchema)
@@ -20,17 +19,15 @@ const post = (req, res) => {
           res.status(200).redirect("/admin");
         })
         .catch(error => {
-          console.log("error in validate");
-
           res
             .status(403)
-            .render("/login", { msglogin: "Введите корректные данные!" });
+            .render("login", { msglogin: "Введите корректные данные!" });
         });
     })
     .catch(error => {
       res
         .status(403)
-        .render("/login", { msglogin: "Введите корректные данные!" });
+        .render("login", { msglogin: "Введите корректные данные!" });
     });
 };
 
