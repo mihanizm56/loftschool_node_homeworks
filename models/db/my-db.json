@@ -9,12 +9,17 @@
         "name": "Миша",
         "price": "1 000",
         "src": "\\assets\\img\\products\\photo-1561583073027.jpg"
+      },
+      {
+        "name": "Миша",
+        "price": "12313",
+        "src": "\\assets\\img\\products\\photo-1561583286470.jpg"
       }
     ],
     "skills": {
       "age": "1",
-      "concerts": "20",
-      "cities": "10",
+      "concerts": "1",
+      "cities": "1",
       "years": "1"
     }
   }

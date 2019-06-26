@@ -24,13 +24,7 @@ const get = (req, res) => {
 };
 
 const skills = (req, res) => {
-  try {
-    const { age, concerts, cities, years } = req.body;
-  } catch (error) {
-    return res
-      .status(400)
-      .render("admin", { msgskill: "Произошла ошибка на сервере!" });
-  }
+  const { age, concerts, cities, years } = req.body;
 
   Joi.validate({ age, concerts, cities, years }, skillsSchema)
     .then(() => {

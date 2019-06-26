@@ -1,6 +1,6 @@
 const sendEmail = require("../../services/mail-sender");
 
-const senderMessage = (req, res) => {
+const post = (req, res) => {
   const { body: { email, name, message } = {} } = req;
 
   if (email && name) {
@@ -20,4 +20,4 @@ const senderMessage = (req, res) => {
   }
 };
 
-module.exports = senderMessage;
+module.exports = { post };
