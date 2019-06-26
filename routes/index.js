@@ -8,8 +8,8 @@ const ctrlLogin = require("../controllers/login-page");
 
 //admin
 router.get("/admin", ctrlAdmin.get); ////
-router.post("/admin/skills", ctrlAdmin.skills);
-router.post("/admin/upload", ctrlAdmin.upload);
+router.post("/admin/skills", ctrlAdmin.skills); ////
+router.post("/admin/upload", ctrlAdmin.upload); ////
 
 //index
 router.get("/index", ctrlIndex.get); //////

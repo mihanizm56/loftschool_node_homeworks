@@ -22,12 +22,6 @@ const setUserProduct = (name, price, src) => {
   });
 };
 
-DATABASE.on("get_user_data", response => {
-  getUserData().then(data => {
-    response.reply(data);
-  });
-});
-
 DATABASE.on("index/get", response => {
   getUserData().then(data => {
     response.reply(data);

@@ -13,7 +13,7 @@ const {
   rename
 } = require("../../services/promise-fs");
 const { photoValidation } = require("../../services/validation");
-const { skillsSchema } = require("../../models/db/schemas");
+const { skillsSchema } = require("./schemas");
 
 const DATABASE = global.DATABASE;
 
@@ -22,12 +22,15 @@ const get = (req, res) => {
 };
 
 const skills = (req, res) => {
-  const { age, concerts, cities, years } = req.body;
+  try {
+    const { age, concerts, cities, years } = req.body;
+  } catch (error) {
+    return res
+      .status(400)
+      .render("admin", { msgskill: "Произошла ошибка на сервере!" });
+  }
 
-  Joi.validate(
-    { age: +age, concerts: +concerts, cities: +cities, years: +years },
-    skillsSchema
-  )
+  Joi.validate({ age, concerts, cities, years }, skillsSchema)
     .then(() => {
       DATABASE.emit("skills/post", req.body)
         .then(() => {
@@ -47,7 +50,7 @@ const skills = (req, res) => {
 
       res
         .status(403)
-        .render("admin", { msgskill: "Произошла ошибка на сервере!" });
+        .render("admin", { msgskill: "Ведите корректные данные!" });
     });
 };
 

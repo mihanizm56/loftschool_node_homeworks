@@ -56,3 +56,7 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
+//////TODO
+/// 1) Multer
+/// 2) Schemas in controllers
