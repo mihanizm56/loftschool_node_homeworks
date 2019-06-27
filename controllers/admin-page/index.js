@@ -7,13 +7,13 @@ const {
   writeFile,
   lstat,
   rmdir,
+  mkdir,
   unlink,
   stat,
   rename
 } = require("../../services/promise-fs");
 const { photoValidation } = require("../../services/validation");
 const { skillsSchema } = require("./schemas");
-const filesUploader = require("../../services/upload-files");
 
 module.exports = (req, res, next) => {};
 
@@ -47,15 +47,28 @@ const skills = (req, res) => {
     });
 };
 
-const upload = (req, res) => {
-  filesUploader(req)
-    .then(data => {
-      const {
-        body: { name, price },
-        path
-      } = data;
+const postAddProduct = (req, res) => {
+  const { name, price } = req.body;
+  const { originalname: photoName, size, buffer, filename } = req.file;
+  const staticPath = path.join("assets", "img", "products");
+  const staticPathToFile = path.join(staticPath, photoName);
+  const uploadDir = path.join(process.cwd(), "/public", staticPath);
 
-      DATABASE.emit("upload/product", { name, price, src: path })
+  photoValidation(req.file)
+    .then(
+      access(uploadDir).catch(() =>
+        mkdir(uploadDir).catch(error =>
+          res
+            .status(500)
+            .render("admin", { msgfile: "Произошла ошибка на сервере!" })
+        )
+      )
+    )
+    .then(() =>
+      rename(path.join(uploadDir, filename), path.join(uploadDir, photoName))
+    )
+    .then(() => {
+      DATABASE.emit("upload/product", { name, price, src: staticPathToFile })
         .then(() => {
           res.status(200).render("admin", { msgfile: "Товар добавлен!" });
         })
@@ -66,15 +79,12 @@ const upload = (req, res) => {
         );
     })
     .catch(error => {
-      console.log("error", error);
-      res
-        .status(403)
-        .render("admin", { msgfile: "Выберите корректные данные!" });
+      res.status(403).render("admin", { msgfile: "Ведите корректные данные!" });
     });
 };
 
 module.exports = {
   get,
   skills,
-  upload
+  postAddProduct
 };

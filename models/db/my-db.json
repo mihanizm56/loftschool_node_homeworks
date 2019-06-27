@@ -4,18 +4,7 @@
       "email": "m727507.56@mail.ru",
       "password": "1"
     },
-    "products": [
-      {
-        "name": "Миша",
-        "price": "1 000",
-        "src": "\\assets\\img\\products\\photo-1561583073027.jpg"
-      },
-      {
-        "name": "Миша",
-        "price": "12313",
-        "src": "\\assets\\img\\products\\photo-1561583286470.jpg"
-      }
-    ],
+    "products": [],
     "skills": {
       "age": "1",
       "concerts": "1",
