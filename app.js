@@ -1,57 +1,67 @@
-require("./services/event-emitter");
-require("./services/db");
+// add the config of .env variables
+require("dotenv").config();
 
-const createError = require("http-errors");
-const path = require("path");
-const router = require("./routes");
+// add the main libs
+const express = require("express");
+const mongoose = require("mongoose");
+const app = express();
+const cors = require("cors");
+const bodyParser = require("body-parser");
+var createError = require("http-errors");
+var logger = require("morgan");
 
-// koa package
-const Koa = require("koa");
-const Pug = require("koa-pug");
-const koaBody = require("koa-body");
-const static = require("koa-static");
-const session = require("koa-session");
-const app = new Koa();
+// add the db event listeners
+require("./api/services/modules/db");
 
-// view engine setup
+// add the main router
+const authRouter = require("./api/routes");
 
-const pug = new Pug({
-  viewPath: "./views/pages",
-  basedir: "./views",
-  pretty: true,
-  noCache: true,
-  app: app
+// define the server port
+const port = process.env.SERVER_PORT || 10000;
+
+// define the middlewares
+app.use(cors({ origin: "*" }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use("/auth", authRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
 });
 
-app.use(
-  koaBody({
-    formidable: {
-      uploadDir: path.join(__dirname, "public", "assets", "img", "products")
-    },
-    multipart: true
-  })
-);
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
 
-app.use(
-  session(
-    {
-      key: "koa:sess",
-      maxAge: "session",
-      overwrite: true,
-      httpOnly: true,
-      signed: false,
-      rolling: false,
-      renew: false
-    },
-    app
-  )
-);
-app.use(static(path.join(__dirname, "public")));
-
-// routes
-app.use(router.routes());
-app.use(router.allowedMethods());
-
-app.listen(8080, () => {
-  console.log("Server running on localhost:8080");
+  // render the error page
+  res.status(err.status || 500);
+  res.render("error");
 });
+
+// func to start the server
+const startServer = () => {
+  app.listen(port);
+  console.log("auth app started on port", port);
+};
+
+// func to start the db connection
+const connectDB = () => {
+  mongoose.Promise = global.Promise;
+
+  const options = {
+    useNewUrlParser: true
+  };
+
+  mongoose.connect(process.env.DB_URL, options);
+  mongoose.set("useCreateIndex", true);
+
+  console.log("connected to db");
+
+  return mongoose.connection;
+};
+
+// func to start the whole rest-api server
+connectDB().once("open", startServer);

@@ -18,27 +18,7 @@
 *.sublime-workspace
 ._*
 .cache
-.DS_Store
-.project
-.settings
-.tmproj
-Thumbs.db
-
-# Folders to ignore
-.CVS
-.git
-.env
-.hg
-.idea
-.svn
-.vscode
-bower_components
-dist
-build
-
-# Files to ignore
-package-lock.json
-
 # Node.JS
 node_modules
-npm-debug.log
+public
+package-lock.json
