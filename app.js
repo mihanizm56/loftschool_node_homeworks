@@ -3,7 +3,6 @@ require("./services/db");
 
 const createError = require("http-errors");
 const path = require("path");
-const logger = require("morgan");
 const router = require("./routes");
 
 // koa package
@@ -24,7 +23,6 @@ const pug = new Pug({
   app: app
 });
 
-// app.use(logger("dev"));
 app.use(
   koaBody({
     formidable: {

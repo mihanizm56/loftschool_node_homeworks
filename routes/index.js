@@ -18,7 +18,7 @@ const router = new Router();
 router.get("/index", ctrlIndex.get);
 
 //login
-// router.get("/login", ctrlLogin.get);
-// router.post("/login", ctrlLogin.post);
+router.get("/login", ctrlLogin.get);
+router.post("/login", ctrlLogin.post);
 
 module.exports = router;
