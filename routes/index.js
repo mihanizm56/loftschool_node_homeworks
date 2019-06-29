@@ -10,7 +10,7 @@ const ctrlLogin = require("../controllers/login-page");
 const ctrlMail = require("../controllers/mail-sender");
 
 //admin
-router.get("/admin", ctrlAdmin.get);
+router.get("/admin", adminMiddleware, ctrlAdmin.get);
 router.post("/admin/skills", ctrlAdmin.skills);
 router.post("/admin/upload", upload.single("photo"), ctrlAdmin.postAddProduct);
 
@@ -22,6 +22,6 @@ router.get("/login", ctrlLogin.get);
 router.post("/login", ctrlLogin.post);
 
 //index
-router.post("/mail", ctrlMail.post);
+router.post("/mail", adminMiddleware, ctrlMail.post);
 
 module.exports = router;

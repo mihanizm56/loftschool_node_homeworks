@@ -25,9 +25,11 @@ const get = (req, res) => {
 
 const skills = (req, res) => {
   const { age, concerts, cities, years } = req.body;
+  console.log("1");
 
   Joi.validate({ age, concerts, cities, years }, skillsSchema)
     .then(() => {
+      console.log("2");
       DATABASE.emit("skills/post", req.body)
         .then(() => {
           res
@@ -35,12 +37,14 @@ const skills = (req, res) => {
             .render("admin", { msgskill: "Ваши данные обновлены!" });
         })
         .catch(error => {
+          console.log("3");
           res
             .status(500)
             .render("admin", { msgskill: "Произошла ошибка на сервере!" });
         });
     })
     .catch(error => {
+      console.log("4");
       res
         .status(403)
         .render("admin", { msgskill: "Ведите корректные данные!" });
@@ -55,7 +59,7 @@ const postAddProduct = (req, res) => {
   const uploadDir = path.join(process.cwd(), "/public", staticPath);
 
   photoValidation(req.file)
-    .then(
+    .then(() =>
       access(uploadDir).catch(() =>
         mkdir(uploadDir).catch(error =>
           res
