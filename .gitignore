@@ -20,5 +20,5 @@
 .cache
 # Node.JS
 node_modules
-public
 package-lock.json
+.env
