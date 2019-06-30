@@ -1,6 +1,6 @@
 // add the config of .env variables
 require("dotenv").config();
-require("./services/event-emitter");
+require("./services/event-emitters");
 require("./models/db/db");
 
 const createError = require("http-errors");
