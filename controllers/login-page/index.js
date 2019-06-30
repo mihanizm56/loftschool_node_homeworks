@@ -13,20 +13,24 @@ const post = (req, res) => {
 
   return Joi.validate({ email, password }, userSchema)
     .then(() => {
-      DATABASE.emit("login/post", { email, password })
+      DATABASE.emit("user/get", {})
+        .then(
+          ({ credentials: { email: userEmail, password: userPassword } }) => {
+            if (email !== userEmail || password !== userPassword) {
+              return res
+                .status(400)
+                .render("login", { msglogin: "Введите корректные данные!" });
+            }
+          }
+        )
         .then(() => {
           req.session.validUser = true;
           res.status(200).redirect("/admin");
-        })
-        .catch(error => {
-          res
-            .status(403)
-            .render("login", { msglogin: "Введите корректные данные!" });
         });
     })
     .catch(error => {
       res
-        .status(403)
+        .status(400)
         .render("login", { msglogin: "Введите корректные данные!" });
     });
 };

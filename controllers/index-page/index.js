@@ -1,7 +1,7 @@
 const DATABASE = global.DATABASE;
 
 const get = (req, res) => {
-  DATABASE.emit("index/get", {})
+  DATABASE.emit("user/get", {})
     .then(({ skills, products }) => {
       res.status(200).render("index", { skills, products });
     })

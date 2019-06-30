@@ -1,7 +1,7 @@
 // add the config of .env variables
 require("dotenv").config();
 require("./services/event-emitter");
-require("./services/db");
+require("./models/db/db");
 
 const createError = require("http-errors");
 const express = require("express");

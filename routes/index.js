@@ -11,8 +11,13 @@ const ctrlMail = require("../controllers/mail-sender");
 
 //admin
 router.get("/admin", adminMiddleware, ctrlAdmin.get);
-router.post("/admin/skills", ctrlAdmin.skills);
-router.post("/admin/upload", upload.single("photo"), ctrlAdmin.postAddProduct);
+router.post("/admin/skills", adminMiddleware, ctrlAdmin.skills);
+router.post(
+  "/admin/upload",
+  adminMiddleware,
+  upload.single("photo"),
+  ctrlAdmin.postAddProduct
+);
 
 //index
 router.get("/index", ctrlIndex.get);
