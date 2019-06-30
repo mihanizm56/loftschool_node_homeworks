@@ -8,11 +8,12 @@ const session = require("express-session");
 const passport = require("passport");
 
 require("dotenv").config();
-require("./services/db");
+require("./models/db");
+require("./middlewares/passport");
 
 const rootRouter = require("./routes");
 const { startServer, connectDB } = require("./utils");
-const initPassport = require("./middlewares/passport/init");
+const initPassport = require("./middlewares/passport");
 const portForApp = process.env.SERVER_PORT || 8080;
 const urlForDB = process.env.DB_URL;
 
@@ -34,8 +35,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
-initPassport(passport);
 
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
