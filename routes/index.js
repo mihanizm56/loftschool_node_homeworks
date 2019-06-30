@@ -10,9 +10,9 @@ const ctrlLogin = require("../controllers/login-page");
 const router = new Router();
 
 //admin
-// router.get("/admin", ctrlAdmin.get);
-// router.post("/admin/skills", ctrlAdmin.skills);
-// router.post("/admin/upload", upload.single("photo"), ctrlAdmin.postAddProduct);
+router.get("/admin", adminMiddleware, ctrlAdmin.get);
+router.post("/admin/skills", ctrlAdmin.skills);
+router.post("/admin/upload", ctrlAdmin.postAddProduct);
 
 //index
 router.get("/index", ctrlIndex.get);

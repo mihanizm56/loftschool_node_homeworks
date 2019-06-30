@@ -1,2 +1,2 @@
-module.exports = (req, res, next) =>
-  req.session.validUser ? next() : res.redirect("/login");
+module.exports = async (ctx, next) =>
+  ctx.session.validUser ? next() : ctx.redirect("/login");

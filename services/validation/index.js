@@ -1,6 +1,6 @@
-const photoValidation = file =>
+const photoValidation = (name, size) =>
   new Promise((resolve, reject) => {
-    file.originalname && file.size ? resolve() : reject();
+    name && size ? resolve() : reject();
   });
 
 module.exports = {
