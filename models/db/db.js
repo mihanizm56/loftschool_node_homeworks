@@ -35,7 +35,7 @@ DATABASE.on("skills/post", response => {
     .catch(error => response.replyErr(error));
 });
 
-DATABASE.on("upload/product", response => {
+DATABASE.on("upload/item", response => {
   const {
     data: { name, price, src }
   } = response;

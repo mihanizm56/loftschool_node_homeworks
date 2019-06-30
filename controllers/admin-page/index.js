@@ -68,7 +68,7 @@ const postAddProduct = (req, res) => {
       rename(path.join(uploadDir, filename), path.join(uploadDir, photoName))
     )
     .then(() => {
-      DATABASE.emit("upload/product", { name, price, src: staticPathToFile })
+      DATABASE.emit("upload/item", { name, price, src: staticPathToFile })
         .then(() => {
           res.status(200).render("admin", { msgfile: "Товар добавлен!" });
         })
