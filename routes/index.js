@@ -11,8 +11,8 @@ const router = new Router();
 
 //admin
 router.get("/admin", adminMiddleware, ctrlAdmin.get);
-router.post("/admin/skills", ctrlAdmin.skills);
-router.post("/admin/upload", ctrlAdmin.postAddProduct);
+router.post("/admin/skills", adminMiddleware, ctrlAdmin.skills);
+router.post("/admin/upload", adminMiddleware, ctrlAdmin.postAddProduct);
 
 //index
 router.get("/index", ctrlIndex.get);

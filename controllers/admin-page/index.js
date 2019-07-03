@@ -31,7 +31,7 @@ const skills = async ctx => {
     await Joi.validate({ age, concerts, cities, years }, skillsSchema);
   } catch (error) {
     console.log("error", error);
-    ctx.status = 403;
+    ctx.status = 400;
     ctx.render("login", { msgskill: "Введите корректные данные!" });
   }
 
@@ -57,7 +57,7 @@ const postAddProduct = async ctx => {
     await photoValidation(photoName, size);
   } catch (error) {
     console.log("error", error);
-    ctx.status = 403;
+    ctx.status = 400;
     ctx.render("admin", { msgfile: "Введите корректные данные!" });
     return;
   }

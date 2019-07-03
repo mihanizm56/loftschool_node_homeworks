@@ -1,5 +1,5 @@
 require("./services/event-emitter");
-require("./services/db");
+require("./database/db");
 
 const createError = require("http-errors");
 const path = require("path");

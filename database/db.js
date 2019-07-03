@@ -1,5 +1,5 @@
-const db = require("../../models/db")();
-const { userCredentialsValidation } = require("../validation");
+const db = require(".")();
+const { userCredentialsValidation } = require("../services/validation");
 
 const DATABASE = global.DATABASE;
 
@@ -22,7 +22,7 @@ const setUserProduct = (name, price, src) => {
   });
 };
 
-DATABASE.on("index/get", response => {
+DATABASE.on("user/get", response => {
   getUserData().then(data => {
     response.reply(data);
   });
