@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("./services/db");
+require("./models/db");
 
 const createError = require("http-errors");
 const mongoose = require("mongoose");
