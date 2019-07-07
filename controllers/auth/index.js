@@ -6,7 +6,7 @@ const {
 } = require("../../services/passwords");
 
 const createUser = async (req, res) => {
-  const newUser = req.body;
+  const newUser = JSON.parse(req.body);
   console.log("check data of user", newUser);
 
   try {
@@ -27,12 +27,13 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-  const loginedUser = req.body;
+  const loginedUser = JSON.parse(req.body);
   console.log("check data of user", loginedUser);
 
   try {
     await validateUser(loginedUser);
     const user = await getUserFromDb(loginedUser);
+    console.log("check data of user from db", user);
     const comparePasswords = compareHashedPasswords(
       makeHashedPassword(loginedUser.password),
       user.password
