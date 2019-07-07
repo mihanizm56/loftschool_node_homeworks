@@ -6,5 +6,6 @@ const authCtrl = require("../controllers/auth");
 router.get("*", sendSPA.get);
 
 router.post("/api/saveNewUser", authCtrl.createUser);
+router.post("/api/login", authCtrl.loginUser);
 
 module.exports = router;
