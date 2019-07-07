@@ -14,8 +14,9 @@ const params = {
 passport.use(
   new Strategy(params, async (payload, done) => {
     console.log("payload in token from headers", payload);
-    Boolean(payload.username)
-      ? done(null, payload)
+    const { username, password } = payload;
+    Boolean(username && password)
+      ? done(null, { username, password })
       : done(new Error("token not found"));
   })
 );

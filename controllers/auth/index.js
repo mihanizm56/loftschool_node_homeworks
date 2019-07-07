@@ -51,7 +51,44 @@ const loginUser = async (req, res) => {
   }
 };
 
+const tokenAuth = async (req, res) => {
+  const loginedUser = req.user;
+  console.log("check data of user", loginedUser);
+
+  try {
+    await validateUser(loginedUser);
+    const {
+      username,
+      password,
+      firstName,
+      surName,
+      middleName
+    } = await getUserFromDb(loginedUser);
+
+    if (username && password) {
+      const responceUserData = { username, firstName, surName, middleName };
+      const comparePasswords = compareHashedPasswords(
+        makeHashedPassword(loginedUser.password),
+        password
+      );
+
+      console.log("check data of user from db", responceUserData);
+      if (password && comparePasswords) {
+        console.log("user is defined, pass");
+        res.status(200).send(responceUserData);
+      } else {
+        console.log("user is not defined");
+        res.status(401).send("user not valid");
+      }
+    }
+  } catch (error) {
+    console.log("not valid data", error);
+    res.status(400).send("not valid user data");
+  }
+};
+
 module.exports = {
   loginUser,
-  createUser
+  createUser,
+  tokenAuth
 };
