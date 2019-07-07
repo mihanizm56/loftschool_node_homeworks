@@ -7,13 +7,15 @@ const {
 
 module.exports.addUserInDb = userData => {
   const User = mongoose.model("User");
+
   return (newUser = new User({
     ...userData,
     password: makeHashedPassword(userData.password)
   }));
 };
 
-module.exports.getUserFromDb = username => {
+module.exports.getUserFromDb = ({ username }) => {
   const Users = mongoose.model("User");
+
   return Users.findOne({ username });
 };

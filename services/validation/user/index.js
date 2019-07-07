@@ -1,9 +1,17 @@
 const Joi = require("@hapi/joi");
-const userSchema = require("../../models/users/joi-schema");
+const userSchema = require("../../../models/users/joi-schema");
 
-module.exports = ({ username, password, name, secondname, lastname }) => {
+const validateUser = ({
+  username,
+  password,
+  firstName,
+  surName,
+  middleName
+}) => {
   return Joi.validate(
-    { username, password, name, secondname, lastname },
-    skillsSchema
+    { username, password, firstName, surName, middleName },
+    userSchema
   );
 };
+
+module.exports = { validateUser };
