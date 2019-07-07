@@ -27,7 +27,6 @@ Thumbs.db
 # Folders to ignore
 .CVS
 .git
-.env
 .hg
 .idea
 .svn
