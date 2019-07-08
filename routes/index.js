@@ -11,5 +11,6 @@ router.post("/api/saveNewUser", authCtrl.createUser);
 router.post("/api/login", authCtrl.loginUser);
 router.post("/api/authFromToken", tokenAuthMiddleware, authCtrl.tokenAuth);
 router.put("/api/updateUser/:id", authCtrl.updateUser);
+router.delete("/api/deleteUser/:id", authCtrl.deleteUser);
 
 module.exports = router;

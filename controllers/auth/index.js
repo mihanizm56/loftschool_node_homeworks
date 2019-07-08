@@ -2,7 +2,8 @@ const {
   addUserInDb,
   getUserFromDbByUserName,
   getUserFromDbById,
-  updateUserFromDb
+  updateUserFromDb,
+  deleteUserByIdFromDb
 } = require("../../models/users");
 const { validateUser } = require("../../services/validation/user");
 const {
@@ -171,9 +172,24 @@ const updateUser = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  const userId = req.params;
+  console.log("check id of user to delete", userId);
+
+  try {
+    await deleteUserByIdFromDb(userId);
+    res.status(200).send("success");
+  } catch (error) {
+    console.log("not valid data", error);
+
+    res.status(400).send("delete error");
+  }
+};
+
 module.exports = {
   loginUser,
   createUser,
   tokenAuth,
-  updateUser
+  updateUser,
+  deleteUser
 };

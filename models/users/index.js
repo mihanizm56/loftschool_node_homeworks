@@ -5,37 +5,32 @@ const {
   compareHashedPasswords
 } = require("../../services/passwords");
 
-module.exports.addUserInDb = userData => {
-  const User = mongoose.model("User");
+const UserModel = mongoose.model("User");
 
-  return (newUser = new User({
+const addUserInDb = userData =>
+  (newUser = new UserModel({
     ...userData,
     password: makeHashedPassword(userData.password)
   }));
-};
 
-module.exports.getUserFromDbByUserName = ({ username }) => {
-  const Users = mongoose.model("User");
+const getUserFromDbByUserName = ({ username }) =>
+  UserModel.findOne({ username });
 
-  return Users.findOne({ username });
-};
+const getUserFromDbById = ({ id: _id }) => UserModel.findOne({ _id });
 
-module.exports.getUserFromDbById = ({ id: _id }) => {
-  const Users = mongoose.model("User");
-
-  return Users.findOne({ _id });
-};
-
-module.exports.updateUserFromDb = ({
-  prevUserName,
-  username,
-  password,
-  ...rest
-}) => {
-  const Users = mongoose.model("User");
-
-  return Users.findOneAndUpdate(
+const updateUserFromDb = ({ prevUserName, username, password, ...rest }) =>
+  UserModel.findOneAndUpdate(
     { username: prevUserName },
     { username, password, ...rest }
   );
+
+const deleteUserByIdFromDb = ({ id: _id }) =>
+  UserModel.deleteOne({ _id: mongoose.Types.ObjectId(`${_id}`) });
+
+module.exports = {
+  addUserInDb,
+  getUserFromDbByUserName,
+  getUserFromDbById,
+  updateUserFromDb,
+  deleteUserByIdFromDb
 };
