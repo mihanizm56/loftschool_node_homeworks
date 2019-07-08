@@ -17,7 +17,7 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(logger("dev"));
 app.use(express.json());
-app.use(bodyParser.text());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -48,7 +48,8 @@ const connectDB = () => {
   mongoose.Promise = global.Promise;
 
   const options = {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: false
   };
 
   mongoose.connect(process.env.DB_URL, options);
