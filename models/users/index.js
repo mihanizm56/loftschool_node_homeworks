@@ -27,10 +27,13 @@ const updateUserFromDb = ({ prevUserName, username, password, ...rest }) =>
 const deleteUserByIdFromDb = ({ id: _id }) =>
   UserModel.deleteOne({ _id: mongoose.Types.ObjectId(`${_id}`) });
 
+const getAllUsersFromDb = () => UserModel.find();
+
 module.exports = {
   addUserInDb,
   getUserFromDbByUserName,
   getUserFromDbById,
   updateUserFromDb,
-  deleteUserByIdFromDb
+  deleteUserByIdFromDb,
+  getAllUsersFromDb
 };

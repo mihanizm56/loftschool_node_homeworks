@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("./models/db");
+require("./services/db-listeners");
 require("./middlewares/passport");
 
 const createError = require("http-errors");
