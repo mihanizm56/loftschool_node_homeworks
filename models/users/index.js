@@ -29,11 +29,16 @@ const deleteUserByIdFromDb = ({ id: _id }) =>
 
 const getAllUsersFromDb = () => UserModel.find();
 
+const savePhotoToUser = ({ userId, src }) => {
+  UserModel.findOneAndUpdate({ id: userId }, { src }, { overwrite: false });
+};
+
 module.exports = {
   addUserInDb,
   getUserFromDbByUserName,
   getUserFromDbById,
   updateUserFromDb,
   deleteUserByIdFromDb,
-  getAllUsersFromDb
+  getAllUsersFromDb,
+  savePhotoToUser
 };
