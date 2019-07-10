@@ -7,19 +7,11 @@ const {
 
 const NewsModel = mongoose.model("News");
 
-const addNew = ({ theme, date, text, userId, id }) =>
-  (newUser = new NewsModel({
-    theme,
-    date,
-    text,
-    userId,
-    id
-  }));
+const addNew = newNew => (newUser = new NewsModel(newNew));
 
 const getAllNews = () => NewsModel.find();
 
-const getNew = ({ theme, date, text, userId }) =>
-  NewsModel.findOne({ theme, date, text, userId });
+const getNew = newData => NewsModel.findOne(newData);
 
 const updateNew = ({
   prevTheme,

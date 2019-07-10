@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const multer = require("multer");
 const sendSPA = require("../controllers/app");
 const authCtrl = require("../controllers/auth");
@@ -7,20 +8,8 @@ const newsCtrl = require("../controllers/news");
 const filesCtrl = require("../controllers/files");
 const passport = require("passport");
 const tokenAuthMiddleware = passport.authenticate("jwt", { session: false });
-// const upload = multer({ dest: "public/upload" });
+const upload = multer({ dest: "public/upload" });
 const router = express.Router();
-
-// configure storage for uploaded files
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(process.cwd(), "public", "upload"));
-  },
-  filename: (req, file, cb) => {
-    const newFilename = `${req.user.id}${path.extname(file.originalname)}`;
-    cb(null, newFilename);
-  }
-});
-const upload = multer({ storage });
 
 router.get("/", sendSPA.get);
 
@@ -41,11 +30,9 @@ router.post("/api/newNews", newsCtrl.newNews);
 router.put("/api/updateNews/:id", newsCtrl.updateNews);
 router.delete("/api/deleteNews/:id", newsCtrl.deleteNews);
 
-// file update
-router.post(
-  "/api/saveUserImage/:id",
-  upload.single("photo"),
-  filesCtrl.saveUserImage
-);
+// files
+
+router.use(bodyParser.json());
+router.post("/api/saveUserImage/:id", upload.any(), filesCtrl.saveUserImage);
 
 module.exports = router;

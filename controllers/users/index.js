@@ -18,6 +18,7 @@ const updateUser = async (req, res) => {
   const userDataToUpdate = JSON.parse(req.body);
   // const userDataToUpdate = req.body;
   const userId = req.params.id;
+  console.log("update user data", userId, userDataToUpdate);
 
   try {
     const user = await getUserFromDbById(userId);

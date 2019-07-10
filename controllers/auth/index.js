@@ -15,9 +15,10 @@ const { createToken } = require("../../services/tokens");
 const createUser = async (req, res) => {
   const newUser = JSON.parse(req.body);
   // const newUser = req.body;
+  console.log("check new user", newUser);
 
   try {
-    await validateUser(newUser);
+    await validateUser({ ...newUser, image: newUser.img });
     const user = await getUserFromDbByUserName(newUser);
     if (user) {
       res.status(400).send("user exists");
@@ -29,10 +30,10 @@ const createUser = async (req, res) => {
           firstName,
           surName,
           middleName,
-          img,
+          image,
           permission,
           _id: id
-        } = await addUserInDb(newUser).save();
+        } = await addUserInDb({ ...newUser, image: newUser.img }).save();
         const access_token = createToken(id);
         res.status(200).send({
           username,
@@ -40,15 +41,17 @@ const createUser = async (req, res) => {
           surName,
           middleName,
           id,
-          img,
+          image,
           permission,
           access_token
         });
       } catch (error) {
+        console.log(error);
         res.status(400).send("not valid user data");
       }
     }
   } catch (error) {
+    console.log(error);
     res.status(400).send("not valid user data");
   }
 };
@@ -65,7 +68,7 @@ const loginUser = async (req, res) => {
       firstName,
       surName,
       middleName,
-      img,
+      image,
       permission,
       _id: id
     } = await getUserFromDbByUserName(loginedUser);
@@ -82,7 +85,7 @@ const loginUser = async (req, res) => {
         surName,
         middleName,
         id,
-        img,
+        image,
         permission,
         access_token
       });
@@ -105,7 +108,7 @@ const tokenAuth = async (req, res) => {
       password,
       surName,
       middleName,
-      img,
+      image,
       permission,
       _id: id
     } = await getUserFromDbByUserName(loginedUser);
@@ -117,7 +120,7 @@ const tokenAuth = async (req, res) => {
         surName,
         middleName,
         id,
-        img,
+        image,
         permission
       };
       const comparePasswords = compareHashedPasswords(

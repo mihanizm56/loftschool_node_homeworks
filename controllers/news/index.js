@@ -5,39 +5,68 @@ const {
   updateNew,
   deleteNew
 } = require("../../models/news");
-const uniqueId = require("lodash/uniqueId");
+const pick = require("lodash/pick");
 const { validateNews } = require("../../services/validation/news");
+const { getUserFromDbById } = require("../../models/users");
+const { createToken } = require("../../services/tokens");
 
 const getNews = async (req, res) => {
   try {
     const news = await getAllNews();
-    res.status(200).send(news);
+
+    const result = news.map(async item => {
+      const newsData = pick(item, ["userId", "theme", "date", "text"]);
+      const userId = newsData.userId;
+      const userData = pick(await getUserFromDbById(userId), [
+        "username",
+        "firstName",
+        "surName",
+        "middleName"
+      ]);
+      const access_token = createToken(userData._id);
+
+      return {
+        ...newsData,
+        user: {
+          access_token,
+          username: userData.username,
+          firstName: userData.firstName,
+          surName: userData.surName,
+          middleName: userData.middleName,
+          id: userData._id,
+          image: userData.image,
+          permission: userData.permission
+        }
+      };
+    });
+
+    const newsResult = await Promise.all(result);
+
+    res.status(200).send(newsResult);
   } catch (error) {
     console.log("error when getting news", error);
-    res.status(400).send("not valid data");
   }
 };
 
 const newNews = async (req, res) => {
   // const newNew = JSON.parse(req.body);
   const newNew = req.body;
-  const idOfNew = uniqueId();
+  const { theme, date, text, userId } = newNew;
   console.log("check data of new", newNew);
 
   try {
-    await validateNews({ ...newNew, id: idOfNew });
-    const existedNew = await getNew({ ...newNew, id: idOfNew });
-    if (existedNew) {
+    await validateNews(newNew);
+    const existsNew = await getNew(newNew);
+    if (existsNew) {
       console.log("there is a new in db");
       res.status(400).send("new exists");
     } else {
       try {
         console.log("add the new in db");
-        await addNew({ ...newNew, id: idOfNew }).save();
-        res.status(200).send({
-          ...newNew,
-          id: idOfNew
-        });
+        await addNew(newNew).save();
+
+        const news = await getAllNews();
+        res.status(200).send(news);
       } catch (error) {
         console.log("not valid data", error);
         res.status(400).send("not valid user data");

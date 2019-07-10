@@ -7,10 +7,11 @@ const validateUser = ({
   firstName,
   surName,
   middleName,
-  permission
+  permission,
+  image
 }) => {
   return Joi.validate(
-    { username, password, firstName, surName, middleName, permission },
+    { username, password, firstName, surName, middleName, permission, image },
     userSchema
   );
 };

@@ -9,13 +9,6 @@ module.exports = Joi.object().keys({
     .min(1)
     .max(20)
     .required(),
-  userId: Joi.string()
-    .min(1)
-    .max(20)
-    .required(),
-  id: Joi.string()
-    .min(1)
-    .max(20)
-    .required(),
+  userId: Joi.string().required(),
   date: Joi.date()
 });

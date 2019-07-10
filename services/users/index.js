@@ -5,13 +5,14 @@ const getPermissionUsersData = arrayOfUsers =>
       firstName,
       surName,
       middleName,
-      img,
+      image,
       permission,
       _id: id
     }) => ({
       username,
       firstName,
       surName,
+      image,
       middleName,
       id
     })
