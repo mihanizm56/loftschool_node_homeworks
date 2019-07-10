@@ -12,46 +12,36 @@ const {
   compareHashedPasswords
 } = require("../../services/passwords");
 const { getPermissionUsersData } = require("../../services/users");
+const { createToken } = require("../../services/tokens");
 
 const updateUser = async (req, res) => {
-  // const loginedUser = JSON.parse(req.body);
-  const userDataToUpdate = req.body;
-  const userId = req.params;
-  const { username, password, ...rest } = userDataToUpdate;
-  console.log("check data of user", userDataToUpdate);
+  const userDataToUpdate = JSON.parse(req.body);
+  // const userDataToUpdate = req.body;
+  const userId = req.params.id;
 
   try {
-    await validateUser(userDataToUpdate);
     const user = await getUserFromDbById(userId);
-    console.log("check data of user from db", user);
-    const comparePasswords = compareHashedPasswords(
-      makeHashedPassword(password),
-      user.password
-    );
-    if (user && comparePasswords) {
-      console.log("user is defined try to update");
+
+    if (user) {
       try {
-        await updateUserFromDb({
-          prevUserName: user.username,
-          username,
-          password: makeHashedPassword(password),
-          ...rest
-        });
-        console.log("new user data is updated");
-        res.status(200).send({
-          username,
-          ...rest
-        });
+        const userFullData = {
+          username: user.username,
+          firstName: user.firstName,
+          surName: user.surName,
+          middleName: user.middleName,
+          permission: user.permission,
+          ...userDataToUpdate
+        };
+        const access_token = createToken(user._id);
+        await updateUserFromDb(userId, userFullData);
+        res.status(200).send({ ...userFullData, access_token });
       } catch (error) {
-        console.log("new user data was not updated", error);
         res.status(400).send("not valid user data");
       }
     } else {
-      console.log("user is not defined");
       res.status(401).send("user not valid");
     }
   } catch (error) {
-    console.log("not valid data", error);
     res.status(400).send("not valid user data");
   }
 };

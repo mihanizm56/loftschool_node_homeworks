@@ -25,6 +25,11 @@ const usersSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: false
+  },
+  permission: {
+    type: Object,
+    required: true,
+    unique: false
   }
 });
 

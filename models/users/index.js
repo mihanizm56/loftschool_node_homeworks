@@ -16,12 +16,13 @@ const addUserInDb = userData =>
 const getUserFromDbByUserName = ({ username }) =>
   UserModel.findOne({ username });
 
-const getUserFromDbById = ({ id: _id }) => UserModel.findOne({ _id });
+const getUserFromDbById = _id => UserModel.findOne({ _id });
 
-const updateUserFromDb = ({ prevUserName, username, password, ...rest }) =>
+const updateUserFromDb = (userId, userData) =>
   UserModel.findOneAndUpdate(
-    { username: prevUserName },
-    { username, password, ...rest }
+    { _id: userId },
+    { ...userData, password: makeHashedPassword(userData.password) },
+    { overwrite: false }
   );
 
 const deleteUserByIdFromDb = ({ id: _id }) =>

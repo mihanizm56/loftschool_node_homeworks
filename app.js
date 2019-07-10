@@ -17,7 +17,7 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(logger("dev"));
 app.use(express.json());
-app.use(bodyParser.json());
+app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -62,3 +62,5 @@ const connectDB = () => {
 
 // func to start the whole rest-api server
 connectDB().once("open", startServer);
+
+/// date,text,theme

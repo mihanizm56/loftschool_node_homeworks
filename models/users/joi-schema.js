@@ -17,5 +17,6 @@ module.exports = Joi.object().keys({
   password: Joi.string()
     .min(1)
     .max(20)
-    .required()
+    .required(),
+  permission: Joi.object()
 });
