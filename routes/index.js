@@ -7,8 +7,20 @@ const newsCtrl = require("../controllers/news");
 const filesCtrl = require("../controllers/files");
 const passport = require("passport");
 const tokenAuthMiddleware = passport.authenticate("jwt", { session: false });
-const upload = multer({ dest: "public/upload" });
+// const upload = multer({ dest: "public/upload" });
 const router = express.Router();
+
+// configure storage for uploaded files
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(process.cwd(), "public", "upload"));
+  },
+  filename: (req, file, cb) => {
+    const newFilename = `${req.user.id}${path.extname(file.originalname)}`;
+    cb(null, newFilename);
+  }
+});
+const upload = multer({ storage });
 
 router.get("/", sendSPA.get);
 

@@ -62,5 +62,3 @@ const connectDB = () => {
 
 // func to start the whole rest-api server
 connectDB().once("open", startServer);
-
-/// date,text,theme
