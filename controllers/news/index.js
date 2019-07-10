@@ -49,13 +49,13 @@ const getNews = async (req, res) => {
 };
 
 const newNews = async (req, res) => {
-  // const newNew = JSON.parse(req.body);
-  const newNew = req.body;
+  const newNew = JSON.parse(req.body);
+  // const newNew = req.body;
   const { theme, date, text, userId } = newNew;
   console.log("check data of new", newNew);
 
   try {
-    await validateNews(newNew);
+    // await validateNews(newNew);
     const existsNew = await getNew(newNew);
     if (existsNew) {
       console.log("there is a new in db");
