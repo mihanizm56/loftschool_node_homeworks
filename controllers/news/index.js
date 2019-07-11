@@ -15,27 +15,29 @@ const getNews = async (req, res) => {
     const news = await getAllNews();
 
     const result = news.map(async item => {
-      const newsData = pick(item, ["userId", "theme", "date", "text"]);
-      const userId = newsData.userId;
+      const userId = item.userId;
+      const newsData = pick(item, ["theme", "date", "text"]);
       const userData = pick(await getUserFromDbById(userId), [
         "username",
         "firstName",
         "surName",
-        "middleName"
+        "middleName",
+        "image"
       ]);
       const access_token = createToken(userData._id);
 
       return {
         ...newsData,
+        id: item._id,
         user: {
-          access_token,
-          username: userData.username,
-          firstName: userData.firstName,
-          surName: userData.surName,
-          middleName: userData.middleName,
-          id: userData._id,
-          image: userData.image,
-          permission: userData.permission
+          access_token: access_token || "",
+          username: userData.username || "",
+          firstName: userData.firstName || "",
+          surName: userData.surName || "",
+          middleName: userData.middleName || "",
+          id: userId || "",
+          image: userData.image || "",
+          permission: userData.permission || ""
         }
       };
     });
@@ -66,7 +68,39 @@ const newNews = async (req, res) => {
         await addNew(newNew).save();
 
         const news = await getAllNews();
-        res.status(200).send(news);
+
+        const result = news.map(async item => {
+          const userId = item.userId;
+          const newsData = pick(item, ["theme", "date", "text"]);
+          const userData = pick(await getUserFromDbById(userId), [
+            "username",
+            "firstName",
+            "surName",
+            "middleName",
+            "image"
+          ]);
+
+          const access_token = createToken(userData._id);
+
+          return {
+            ...newsData,
+            id: item._id,
+            user: {
+              access_token: access_token || "",
+              username: userData.username || "",
+              firstName: userData.firstName || "",
+              surName: userData.surName || "",
+              middleName: userData.middleName || "",
+              id: userId || "",
+              image: userData.image || "",
+              permission: userData.permission || ""
+            }
+          };
+        });
+
+        const newsResult = await Promise.all(result);
+
+        res.status(200).send(newsResult);
       } catch (error) {
         console.log("not valid data", error);
         res.status(400).send("not valid user data");
@@ -79,31 +113,52 @@ const newNews = async (req, res) => {
 };
 
 const updateNews = async (req, res) => {
-  // const newNew = JSON.parse(req.body);
-  //   const updateNew = req.body;
-  //   const { theme, text, userId, date } = updateNew;
-  //   console.log("check data of updated new", updateNew);
-  //   try {
-  //     await validateNews(newNew);
-  //     await updateNew({
-  //       prevTheme,
-  //       prevDate,
-  //       prevText,
-  //       prevUserId,
-  //       newTheme,
-  //       newDate,
-  //       newText,
-  //       newUserId
-  //     });
-  //     console.log("new user data is updated");
-  //     res.status(200).send({
-  //       username,
-  //       ...rest
-  //     });
-  //   } catch (error) {
-  //     console.log("new user data was not updated", error);
-  //     res.status(400).send("not valid user data");
-  //   }
+  const newToUpdate = JSON.parse(req.body);
+  // const updateNew = req.body;
+  const { theme, text, userId, date, id } = newToUpdate;
+  console.log("check data of updated new", newToUpdate);
+  try {
+    await validateNews({ theme, text, userId, date });
+    await updateNew(newToUpdate);
+    console.log("new user data is updated");
+    const news = await getAllNews();
+
+    const result = news.map(async item => {
+      const userId = item.userId;
+      const newsData = pick(item, ["theme", "date", "text"]);
+      const userData = pick(await getUserFromDbById(userId), [
+        "username",
+        "firstName",
+        "surName",
+        "middleName",
+        "image"
+      ]);
+
+      const access_token = createToken(userData._id);
+
+      return {
+        ...newsData,
+        id: item._id,
+        user: {
+          access_token: access_token || "",
+          username: userData.username || "",
+          firstName: userData.firstName || "",
+          surName: userData.surName || "",
+          middleName: userData.middleName || "",
+          id: userId || "",
+          image: userData.image || "",
+          permission: userData.permission || ""
+        }
+      };
+    });
+
+    const newsResult = await Promise.all(result);
+
+    res.status(200).send(newsResult);
+  } catch (error) {
+    console.log("new user data was not updated", error);
+    res.status(400).send("not valid user data");
+  }
 };
 
 const deleteNews = async (req, res) => {

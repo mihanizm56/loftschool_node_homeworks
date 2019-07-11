@@ -13,21 +13,14 @@ const getAllNews = () => NewsModel.find();
 
 const getNew = newData => NewsModel.findOne(newData);
 
-const updateNew = ({
-  prevTheme,
-  prevDate,
-  prevUserId,
-  newTheme,
-  newDate,
-  newText,
-  newUserId
-}) =>
+const updateNew = newData =>
   NewsModel.findOneAndUpdate(
-    { theme: prevTheme, date: prevDate, userId: prevUserId },
-    { theme: newTheme, date: newDate, text: newText, userId: newUserI }
+    { _id: newData.id },
+    { ...newData },
+    { overwrite: false }
   );
 
-const deleteNew = ({ id }) => NewsModel.deleteOne({ id });
+const deleteNew = ({ id }) => NewsModel.findByIdAndRemove({ _id: id });
 
 module.exports = {
   addNew,
