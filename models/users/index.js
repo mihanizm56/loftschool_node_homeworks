@@ -4,6 +4,7 @@ const {
   makeHashedPassword,
   compareHashedPasswords
 } = require("../../services/passwords");
+const { serializePermission } = require("../../services/users");
 
 const UserModel = mongoose.model("User");
 
@@ -21,7 +22,17 @@ const getUserFromDbById = _id => UserModel.findOne({ _id });
 const updateUserFromDb = (userId, userData) =>
   UserModel.findOneAndUpdate(
     { _id: userId },
-    { ...userData, password: makeHashedPassword(userData.password) },
+    {
+      ...userData,
+      password: makeHashedPassword(userData.password)
+    },
+    { overwrite: false }
+  );
+
+const updateUserPermissionsDb = (userId, newPermissions) =>
+  UserModel.findOneAndUpdate(
+    { _id: userId },
+    { permission: { ...newPermissions } },
     { overwrite: false }
   );
 
@@ -45,5 +56,6 @@ module.exports = {
   updateUserFromDb,
   deleteUserByIdFromDb,
   getAllUsersFromDb,
-  savePhotoToUser
+  savePhotoToUser,
+  updateUserPermissionsDb
 };

@@ -4,15 +4,32 @@ const {
   getUserFromDbById,
   updateUserFromDb,
   deleteUserByIdFromDb,
-  getAllUsersFromDb
+  getAllUsersFromDb,
+  updateUserPermissionsDb
 } = require("../../models/users");
 const { validateUser } = require("../../services/validation/user");
 const {
   makeHashedPassword,
   compareHashedPasswords
 } = require("../../services/passwords");
-const { getPermissionUsersData } = require("../../services/users");
+const {
+  getPermissionUsersData,
+  serializePermission
+} = require("../../services/users");
 const { createToken } = require("../../services/tokens");
+
+const resultItemConverter = item => {
+  return {
+    id: item._id,
+    username: item.username,
+    surName: item.surName || "",
+    firstName: item.firstName || "",
+    middleName: item.middleName || "",
+    image: item.image || "",
+    permission: item.permission,
+    permissionId: item._id
+  };
+};
 
 const updateUser = async (req, res) => {
   const userDataToUpdate = JSON.parse(req.body);
@@ -78,11 +95,34 @@ const getAllUsers = async (req, res) => {
 };
 
 const updateUserPermissions = async (req, res) => {
-  const userId = req.params;
+  const userId = req.params.id;
   const userDataToUpdate = JSON.parse(req.body);
-  console.log("update user data", userId, userDataToUpdate);
+  // const {
+  //   permission:{
+  //     chat:{C=false,R=false,U=false,D=false},
+  //     news:{C=false,R=false,U=false,D=false},
+  //     setting:{C=false,R=false,U=false,D=false}
+  //   } = userDataToUpdate
 
-  res.status(200);
+  try {
+    const user = await getUserFromDbById(userId);
+    const newPermissions = serializePermission(
+      user.permission,
+      userDataToUpdate.permission
+    );
+
+    console.log(
+      "///////////////////////",
+      user.permission,
+      userDataToUpdate.permission
+    );
+
+    await updateUserPermissionsDb(userId, newPermissions);
+    res.status(200).send(true);
+  } catch (error) {
+    console.log("error in update in db", error);
+    res.status(500).send("error in update in db");
+  }
 };
 
 module.exports = {
