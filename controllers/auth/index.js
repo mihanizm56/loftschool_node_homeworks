@@ -43,7 +43,8 @@ const createUser = async (req, res) => {
           id,
           image,
           permission,
-          access_token
+          access_token,
+          permissionId: id
         });
       } catch (error) {
         console.log(error);
@@ -87,7 +88,8 @@ const loginUser = async (req, res) => {
         id,
         image,
         permission,
-        access_token
+        access_token,
+        permissionId: id
       });
     } else {
       res.status(401).send("user not valid");

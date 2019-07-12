@@ -77,7 +77,13 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const updateUserPermissions = async (req, res) => {};
+const updateUserPermissions = async (req, res) => {
+  const userId = req.params;
+  const userDataToUpdate = JSON.parse(req.body);
+  console.log("update user data", userId, userDataToUpdate);
+
+  res.status(200);
+};
 
 module.exports = {
   updateUser,
