@@ -24,22 +24,22 @@ const serializePermission = (prevPermission, nextPermissions) => ({
   chat: {
     C:
       nextPermissions.chat &&
-      (nextPermissions.chat.C || nextPermissions.news.C === false)
+      (nextPermissions.chat.C || nextPermissions.chat.C === false)
         ? nextPermissions.chat.C
         : prevPermission.chat.C,
     R:
       nextPermissions.chat &&
-      (nextPermissions.chat.R || nextPermissions.news.R === false)
+      (nextPermissions.chat.R || nextPermissions.chat.R === false)
         ? nextPermissions.chat.R
         : prevPermission.chat.R,
     U:
       nextPermissions.chat &&
-      (nextPermissions.chat.U || nextPermissions.news.U === false)
+      (nextPermissions.chat.U || nextPermissions.chat.U === false)
         ? nextPermissions.chat.U
         : prevPermission.chat.U,
     D:
       nextPermissions.chat &&
-      (nextPermissions.chat.D || nextPermissions.news.D === false)
+      (nextPermissions.chat.D || nextPermissions.chat.D === false)
         ? nextPermissions.chat.D
         : prevPermission.chat.D
   },
@@ -68,22 +68,22 @@ const serializePermission = (prevPermission, nextPermissions) => ({
   setting: {
     C:
       nextPermissions.setting &&
-      (nextPermissions.setting.C || nextPermissions.news.C === false)
+      (nextPermissions.setting.C || nextPermissions.setting.C === false)
         ? nextPermissions.setting.C
         : prevPermission.setting.C,
     R:
       nextPermissions.setting &&
-      (nextPermissions.setting.R || nextPermissions.news.R === false)
+      (nextPermissions.setting.R || nextPermissions.setting.R === false)
         ? nextPermissions.setting.R
         : prevPermission.setting.R,
     U:
       nextPermissions.setting &&
-      (nextPermissions.setting.U || nextPermissions.news.U === false)
+      (nextPermissions.setting.U || nextPermissions.setting.U === false)
         ? nextPermissions.setting.U
         : prevPermission.setting.U,
     D:
       nextPermissions.setting &&
-      (nextPermissions.setting.D || nextPermissions.news.D === false)
+      (nextPermissions.setting.D || nextPermissions.setting.D === false)
         ? nextPermissions.setting.D
         : prevPermission.setting.D
   }

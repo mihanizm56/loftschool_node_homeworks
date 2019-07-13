@@ -6,17 +6,16 @@ const authCtrl = require("../controllers/auth");
 const usersCtrl = require("../controllers/users");
 const newsCtrl = require("../controllers/news");
 const filesCtrl = require("../controllers/files");
+const { cookieTokenAuth } = require("../middlewares/auth");
 const passport = require("passport");
-const tokenAuthMiddleware = passport.authenticate("jwt", { session: false });
+// const tokenAuthMiddleware = passport.authenticate("jwt", { session: false });
 const upload = multer({ dest: "public/upload" });
 const router = express.Router();
-
-router.get("/", sendSPA.get);
 
 // authentification & login
 router.post("/api/saveNewUser", authCtrl.createUser);
 router.post("/api/login", authCtrl.loginUser);
-router.post("/api/authFromToken", tokenAuthMiddleware, authCtrl.tokenAuth);
+router.post("/api/authFromToken", cookieTokenAuth, authCtrl.tokenAuth);
 
 // users rest
 router.put("/api/updateUser/:id", usersCtrl.updateUser);
@@ -26,7 +25,7 @@ router.put("/api/updateUserPermission/:id", usersCtrl.updateUserPermissions);
 
 // news rest
 router.get("/api/getNews", newsCtrl.getNews);
-router.post("/api/newNews", newsCtrl.newNews);
+router.post("/api/newNews", cookieTokenAuth, newsCtrl.newNews);
 router.put("/api/updateNews/:id", newsCtrl.updateNews);
 router.delete("/api/deleteNews/:id", newsCtrl.deleteNews);
 
@@ -34,5 +33,7 @@ router.delete("/api/deleteNews/:id", newsCtrl.deleteNews);
 
 router.use(bodyParser.json());
 router.post("/api/saveUserImage/:id", upload.any(), filesCtrl.saveUserImage);
+
+router.get("*", sendSPA.get);
 
 module.exports = router;

@@ -35,17 +35,23 @@ const createUser = async (req, res) => {
           _id: id
         } = await addUserInDb({ ...newUser, image: newUser.img }).save();
         const access_token = createToken(id);
-        res.status(200).send({
-          username,
-          firstName,
-          surName,
-          middleName,
-          id,
-          image,
-          permission,
-          access_token,
-          permissionId: id
-        });
+        res
+          .cookie("access_token", access_token, {
+            expires: new Date(Date.now() + 2 * 604800000),
+            path: "/"
+          })
+          .status(200)
+          .send({
+            username,
+            firstName,
+            surName,
+            middleName,
+            id,
+            image,
+            permission,
+            access_token,
+            permissionId: id
+          });
       } catch (error) {
         console.log(error);
         res.status(400).send("not valid user data");
@@ -80,17 +86,23 @@ const loginUser = async (req, res) => {
 
     if (username && comparePasswords) {
       const access_token = createToken(id);
-      res.status(200).send({
-        username,
-        firstName,
-        surName,
-        middleName,
-        id,
-        image,
-        permission,
-        access_token,
-        permissionId: id
-      });
+      res
+        .cookie("access_token", access_token, {
+          expires: new Date(Date.now() + 2 * 604800000),
+          path: "/"
+        })
+        .status(200)
+        .send({
+          username,
+          firstName,
+          surName,
+          middleName,
+          id,
+          image,
+          permission,
+          access_token,
+          permissionId: id
+        });
     } else {
       res.status(401).send("user not valid");
     }
@@ -100,43 +112,32 @@ const loginUser = async (req, res) => {
 };
 
 const tokenAuth = async (req, res) => {
-  const loginedUser = req.user;
-
+  console.log("token user id", res.locals.userTokenData);
+  const { user: userId } = res.locals.userTokenData;
   try {
-    await validateUser(loginedUser);
     const {
       username,
       firstName,
-      password,
       surName,
       middleName,
       image,
       permission,
       _id: id
-    } = await getUserFromDbByUserName(loginedUser);
-
-    if (username && password) {
-      const responceUserData = {
-        username,
-        firstName,
-        surName,
-        middleName,
-        id,
-        image,
-        permission
-      };
-      const comparePasswords = compareHashedPasswords(
-        makeHashedPassword(loginedUser.password),
-        password
-      );
-
-      if (password && comparePasswords) {
-        res.status(200).send(responceUserData);
-      } else {
-        res.status(401).send("user not valid");
-      }
-    }
+    } = await getUserFromDbById(userId);
+    const access_token = createToken(userId);
+    res.status(200).send({
+      username,
+      firstName,
+      surName,
+      middleName,
+      id,
+      image,
+      permission,
+      access_token,
+      permissionId: id
+    });
   } catch (error) {
+    console.log("get error", error);
     res.status(400).send("not valid user data");
   }
 };
