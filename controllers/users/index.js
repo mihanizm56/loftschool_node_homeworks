@@ -48,18 +48,22 @@ const updateUser = async (req, res) => {
           surName: user.surName,
           middleName: user.middleName,
           permission: user.permission,
+          password: userDataToUpdate.password || user.password,
           ...userDataToUpdate
         };
         const access_token = createToken(user._id);
+
         await updateUserFromDb(userId, userFullData);
         res.status(200).send({ ...userFullData, access_token });
       } catch (error) {
+        console.log('///////////////////',error);
         res.status(400).send("not valid user data");
       }
     } else {
       res.status(401).send("user not valid");
     }
   } catch (error) {
+    console.log('!!!!!!!!!!!!',error);
     res.status(400).send("not valid user data");
   }
 };
