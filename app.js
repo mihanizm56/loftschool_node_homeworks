@@ -37,12 +37,13 @@ app.use((err, req, res, next) => {
 
 // define the server port
 const port = process.env.SERVER_PORT || 8080;
+var host = process.env.YOUR_HOST || "0.0.0.0";
 
 // func to start the server
 const startServer = serverPort =>
   new Promise((resolve, reject) => {
     try {
-      server.listen(serverPort);
+      server.listen(serverPort, host);
       resolve(server);
     } catch (error) {
       reject(error);
