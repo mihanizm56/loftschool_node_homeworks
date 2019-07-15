@@ -59,7 +59,11 @@ const connectDB = () => {
     useFindAndModify: false
   };
 
-  mongoose.connect(process.env.DB_URL, options);
+  mongoose.connect(
+    process.env.DB_URL ||
+      "mongodb+srv://mihanizm56:mihanizm56@cluster0-rwngz.mongodb.net/auth?retryWrites=true&w=majority",
+    options
+  );
   mongoose.set("useCreateIndex", true);
 
   console.log("connected to mongo db");

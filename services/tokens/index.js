@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-const jwt_secret_key = process.env.SECRET;
-const timeAccessTokenExpires = process.env.TIME_TO_EXPIRE;
+const jwt_secret_key = process.env.SECRET || "secret";
+const timeAccessTokenExpires = process.env.TIME_TO_EXPIRE || 1000;
 
 const createToken = userId => {
   const access_token = jwt.sign({ user: userId }, jwt_secret_key, {

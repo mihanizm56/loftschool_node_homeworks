@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const salt = process.env.SALT;
+const salt = process.env.SALT || "salt";
 
 /// func to hash the password
 module.exports.makeHashedPassword = purePassword => {
