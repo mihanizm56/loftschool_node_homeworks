@@ -12,6 +12,6 @@ deploy:
   api_key:
     secure: $key
   strategy: git
-
-app:
-  master: loft-taxi-mihanizm56
+  app: node-loftschool
+  on:
+    branch: develop
