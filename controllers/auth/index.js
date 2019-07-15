@@ -14,7 +14,6 @@ const { createToken } = require("../../services/tokens");
 
 const createUser = async (req, res) => {
   const newUser = JSON.parse(req.body);
-  const isLongLogined = Boolean(loginedUser.remembered);
   console.log("check new user", newUser);
 
   try {
@@ -37,9 +36,7 @@ const createUser = async (req, res) => {
         const access_token = createToken(id);
         res
           .cookie("access_token", access_token, {
-            expires: isLongLogined
-              ? new Date(Date.now() + 3 * 86400000)
-              : new Date(Date.now() + 0.5 * 86400000),
+            expires: new Date(Date.now() + 3 * 86400000),
             path: "/"
           })
           .status(200)
