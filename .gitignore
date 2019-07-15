@@ -1,6 +1,7 @@
 # Folders to ignore
 .git
 .vscode
+.env
 dist
 build
 
