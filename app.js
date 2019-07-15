@@ -1,6 +1,5 @@
 require("dotenv").config();
 require("./services/db-listeners");
-require("./middlewares/passport");
 
 const createError = require("http-errors");
 const mongoose = require("mongoose");
