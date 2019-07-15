@@ -37,7 +37,7 @@ app.use((err, req, res, next) => {
 
 // define the server port
 const port = process.env.SERVER_PORT || 8080;
-var host = process.env.YOUR_HOST || "0.0.0.0";
+var host = "0.0.0.0";
 
 // func to start the server
 const startServer = serverPort =>
