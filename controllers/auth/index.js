@@ -37,7 +37,9 @@ const createUser = async (req, res) => {
         const access_token = createToken(id);
         res
           .cookie("access_token", access_token, {
-            expires: new Date(Date.now() + 2 * 604800000),
+            expires: isLongLogined
+              ? new Date(Date.now() + 3 * 86400000)
+              : new Date(Date.now() + 0.5 * 86400000),
             path: "/"
           })
           .status(200)
@@ -65,6 +67,7 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const loginedUser = JSON.parse(req.body);
+  const isLongLogined = Boolean(loginedUser.remembered);
   // const loginedUser = req.body;
 
   try {
@@ -88,7 +91,9 @@ const loginUser = async (req, res) => {
       const access_token = createToken(id);
       res
         .cookie("access_token", access_token, {
-          expires: new Date(Date.now() + 2 * 604800000),
+          expires: isLongLogined
+            ? new Date(Date.now() + 3 * 86400000)
+            : new Date(Date.now() + 0.5 * 86400000),
           path: "/"
         })
         .status(200)

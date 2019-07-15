@@ -18,20 +18,22 @@ router.post("/api/login", authCtrl.loginUser);
 router.post("/api/authFromToken", cookieTokenAuth, authCtrl.tokenAuth);
 
 // users rest
-router.put("/api/updateUser/:id", usersCtrl.updateUser);
-router.delete("/api/deleteUser/:id", usersCtrl.deleteUser);
+router.put("/api/updateUser/:id", cookieTokenAuth, usersCtrl.updateUser);
+router.delete("/api/deleteUser/:id", cookieTokenAuth, usersCtrl.deleteUser);
 router.get("/api/getUsers", usersCtrl.getAllUsers);
-router.put("/api/updateUserPermission/:id", usersCtrl.updateUserPermissions);
+router.put(
+  "/api/updateUserPermission/:id",
+  cookieTokenAuth,
+  usersCtrl.updateUserPermissions
+);
 
 // news rest
 router.get("/api/getNews", newsCtrl.getNews);
 router.post("/api/newNews", cookieTokenAuth, newsCtrl.newNews);
-router.put("/api/updateNews/:id", newsCtrl.updateNews);
-router.delete("/api/deleteNews/:id", newsCtrl.deleteNews);
+router.put("/api/updateNews/:id", cookieTokenAuth, newsCtrl.updateNews);
+router.delete("/api/deleteNews/:id", cookieTokenAuth, newsCtrl.deleteNews);
 
 // files
-
-router.use(bodyParser.json());
 router.post("/api/saveUserImage/:id", upload.any(), filesCtrl.saveUserImage);
 
 router.get("*", sendSPA.get);
