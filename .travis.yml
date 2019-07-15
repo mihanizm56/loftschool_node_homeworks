@@ -14,4 +14,4 @@ deploy:
   strategy: git
   app: node-loftschool
   on:
-    branch: develop
+    branch: master
