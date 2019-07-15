@@ -14,7 +14,7 @@ const { createToken } = require("../../services/tokens");
 
 const createUser = async (req, res) => {
   const newUser = JSON.parse(req.body);
-  // const newUser = req.body;
+  const isLongLogined = Boolean(loginedUser.remembered);
   console.log("check new user", newUser);
 
   try {
@@ -68,7 +68,6 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const loginedUser = JSON.parse(req.body);
   const isLongLogined = Boolean(loginedUser.remembered);
-  // const loginedUser = req.body;
 
   try {
     await validateUser(loginedUser);
