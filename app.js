@@ -43,8 +43,9 @@ var host = process.env.YOUR_HOST || "0.0.0.0";
 const startServer = serverPort =>
   new Promise((resolve, reject) => {
     try {
-      server.listen(serverPort, host);
-      resolve(server);
+      server.listen(serverPort, host, () => {
+        resolve(server);
+      });
     } catch (error) {
       reject(error);
     }
