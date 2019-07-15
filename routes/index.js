@@ -7,8 +7,6 @@ const usersCtrl = require("../controllers/users");
 const newsCtrl = require("../controllers/news");
 const filesCtrl = require("../controllers/files");
 const { cookieTokenAuth } = require("../middlewares/auth");
-const passport = require("passport");
-// const tokenAuthMiddleware = passport.authenticate("jwt", { session: false });
 const upload = multer({ dest: "public/upload" });
 const router = express.Router();
 
