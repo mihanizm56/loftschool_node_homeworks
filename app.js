@@ -61,7 +61,7 @@ const startDB = () => {
   return mongoose.connection;
 };
 
-const startApp = (serverState, serverPort) => {
+const startApp = serverPort => serverState => {
   startDB().once("open", () => {
     startServer(serverState, serverPort)
       .then(server => {
@@ -73,4 +73,8 @@ const startApp = (serverState, serverPort) => {
   });
 };
 
-startApp(server, port);
+if (require.main === module) {
+  startApp(port)(server);
+} else {
+  module.exports.startApp = startApp(port);
+}
