@@ -4,7 +4,7 @@ const { photoValidation } = require("../../services/validation/photo");
 const { savePhotoToUser } = require("../../models/users");
 
 const saveUserImage = async (req, res) => {
-  console.log("start upload photo", req.files);
+  // console.log("start upload photo", req.files);
   const fileToUpload = req.files[0]; ///////////////////////////////////////////////////govno
   const userId = req.params;
   const { originalname: photoName, size, buffer, filename } = fileToUpload;

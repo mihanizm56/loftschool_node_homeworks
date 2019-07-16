@@ -14,7 +14,7 @@ const { createToken } = require("../../services/tokens");
 
 const createUser = async (req, res) => {
   const newUser = JSON.parse(req.body);
-  console.log("check new user", newUser);
+  // console.log("check new user", newUser);
 
   try {
     await validateUser({ ...newUser, image: newUser.img });
@@ -113,7 +113,7 @@ const loginUser = async (req, res) => {
 };
 
 const tokenAuth = async (req, res) => {
-  console.log("token user id", res.locals.userTokenData);
+  // console.log("token user id", res.locals.userTokenData);
   const { user: userId } = res.locals.userTokenData;
   try {
     const {

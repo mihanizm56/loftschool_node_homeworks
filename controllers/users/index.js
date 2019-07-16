@@ -35,7 +35,7 @@ const updateUser = async (req, res) => {
   const userDataToUpdate = JSON.parse(req.body);
   // const userDataToUpdate = req.body;
   const userId = req.params.id;
-  console.log("update user data", userId, userDataToUpdate);
+  // console.log("update user data", userId, userDataToUpdate);
 
   try {
     const user = await getUserFromDbById(userId);
@@ -66,25 +66,24 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   const userId = req.params;
-  console.log("check id of user to delete", userId);
+  // console.log("check id of user to delete", userId);
 
   try {
     await deleteUserByIdFromDb(userId);
     res.status(200).send("success");
   } catch (error) {
     console.log("not valid data", error);
-
     res.status(400).send("delete error");
   }
 };
 
 const getAllUsers = async (req, res) => {
-  console.log("send all users");
+  // console.log("send all users");
 
   try {
     const users = await getAllUsersFromDb();
     const permissionUsersData = getPermissionUsersData(users);
-    console.log("get all users", permissionUsersData);
+    // console.log("get all users", permissionUsersData);
 
     res.status(200).send(permissionUsersData);
   } catch (error) {
@@ -111,11 +110,11 @@ const updateUserPermissions = async (req, res) => {
       userDataToUpdate.permission
     );
 
-    console.log(
-      "///////////////////////",
-      user.permission,
-      userDataToUpdate.permission
-    );
+    // console.log(
+    //   "///////////////////////",
+    //   user.permission,
+    //   userDataToUpdate.permission
+    // );
 
     await updateUserPermissionsDb(userId, newPermissions);
     res.status(200).send(true);

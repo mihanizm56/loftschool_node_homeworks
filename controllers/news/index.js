@@ -60,11 +60,11 @@ const newNews = async (req, res) => {
     // await validateNews(newNew);
     const existsNew = await getNew(newNew);
     if (existsNew) {
-      console.log("there is a new in db");
+      // console.log("there is a new in db");
       res.status(400).send("new exists");
     } else {
       try {
-        console.log("add the new in db");
+        // console.log("add the new in db");
         await addNew(newNew).save();
 
         const news = await getAllNews();
@@ -116,11 +116,11 @@ const updateNews = async (req, res) => {
   const newToUpdate = JSON.parse(req.body);
   // const updateNew = req.body;
   const { theme, text, userId, date, id } = newToUpdate;
-  console.log("check data of updated new", newToUpdate);
+  // console.log("check data of updated new", newToUpdate);
   try {
     await validateNews({ theme, text, userId, date });
     await updateNew(newToUpdate);
-    console.log("new user data is updated");
+    // console.log("new user data is updated");
     const news = await getAllNews();
 
     const result = news.map(async item => {
@@ -164,7 +164,7 @@ const updateNews = async (req, res) => {
 const deleteNews = async (req, res) => {
   // const deleteNew = JSON.parse(req.body);
   const deleteNewData = req.params;
-  console.log("check data of delete new", deleteNewData);
+  // console.log("check data of delete new", deleteNewData);
 
   try {
     await deleteNew(deleteNewData);
