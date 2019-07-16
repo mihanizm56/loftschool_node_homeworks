@@ -19,7 +19,8 @@ const getUserFromDbByUserName = ({ username }) =>
 
 const getUserFromDbById = _id => UserModel.findOne({ _id });
 
-const updateUserFromDb = (userId, userData) =>
+const updateUserFromDb = (userId, userData) => console.log('') ||
+
   UserModel.findOneAndUpdate(
     { _id: userId },
     {
