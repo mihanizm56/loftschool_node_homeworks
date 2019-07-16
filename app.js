@@ -1,6 +1,6 @@
 require("dotenv").config();
+const { port, dbURL } = require("./services/variables");
 require("./services/db-listeners");
-
 const createError = require("http-errors");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -35,15 +35,10 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
 });
 
-// define the server port
-const port = process.env.PORT || 8080;
-var host = "0.0.0.0";
-
-// func to start the server
 const startServer = serverPort =>
   new Promise((resolve, reject) => {
     try {
-      server.listen(serverPort, host, () => {
+      server.listen(serverPort, () => {
         resolve(server);
       });
     } catch (error) {
@@ -53,16 +48,14 @@ const startServer = serverPort =>
 
 // func to start the db connection
 const connectDB = () => {
-  mongoose.Promise = global.Promise;
-
   const options = {
     useNewUrlParser: true,
     useFindAndModify: false
   };
 
-  mongoose.connect(process.env.DB_URL, options);
+  mongoose.Promise = global.Promise;
+  mongoose.connect(dbURL, options);
   mongoose.set("useCreateIndex", true);
-
   console.log("connected to mongo db");
 
   return mongoose.connection;
