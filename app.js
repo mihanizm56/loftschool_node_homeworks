@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
 const router = require("./routes");
-const enableChat = require("./controllers/chat");
+const startChat = require("./controllers/chat");
 const app = express();
 const server = require("http").createServer(app);
 
@@ -35,11 +35,11 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
 });
 
-const startServer = serverPort =>
+const startServer = (ownServer, ownPort) =>
   new Promise((resolve, reject) => {
     try {
-      server.listen(serverPort, () => {
-        resolve(server);
+      ownServer.listen(ownPort, () => {
+        resolve(ownServer);
       });
     } catch (error) {
       reject(error);
@@ -47,7 +47,7 @@ const startServer = serverPort =>
   });
 
 // func to start the db connection
-const connectDB = () => {
+const startDB = () => {
   const options = {
     useNewUrlParser: true,
     useFindAndModify: false
@@ -61,13 +61,16 @@ const connectDB = () => {
   return mongoose.connection;
 };
 
-// func to start the whole rest-api server
-connectDB().once("open", () => {
-  startServer(port)
-    .then(server => {
-      console.log("app started on port", port);
-      enableChat(server);
-      console.log("chat started on port", port);
-    })
-    .catch(error => console.log("error during server start", error));
-});
+const startApp = (serverState, serverPort) => {
+  startDB().once("open", () => {
+    startServer(serverState, serverPort)
+      .then(server => {
+        console.log("app started on port", port);
+        startChat(server);
+        console.log("chat started on port", port);
+      })
+      .catch(error => console.log("error during server start", error));
+  });
+};
+
+startApp(server, port);
