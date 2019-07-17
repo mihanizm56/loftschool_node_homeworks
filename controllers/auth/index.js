@@ -89,7 +89,7 @@ const loginUser = async (req, res) => {
         .cookie("access_token", access_token, {
           expires: isLongLogined
             ? new Date(Date.now() + 3 * 86400000)
-            : new Date(Date.now() + 0.5 * 86400000),
+            : new Date(Date.now() + 30 * 86400000),
           path: "/"
         })
         .status(200)

@@ -1,40 +1,23 @@
-let clients = {};
-
-const getfilteredUsers = (object, key) =>
-  Object.keys(object).reduce((acc, item) => {
-    if (item !== key) {
-      acc[item] = object[item];
-    }
-
-    return acc;
-  }, {});
+let clients = [];
 
 module.exports = server => {
   const io = require("socket.io")(server);
 
   io.on("connection", client => {
-    console.log("data before add", clients);
-
     const clientId = client.id;
     const username = client.request.headers.username;
     const userData = {
       id: clientId,
       username
     };
+    console.log("new user connected", userData);
 
-    clients[username] = userData;
-    const isUserExist = Boolean(clients[username]);
-    // if (!isUserExist) {
+    clients.push(userData);
 
-    // }
-    const filteredUsers = isUserExist
-      ? getfilteredUsers(clients, username)
-      : clients;
-
-    console.log("sended data to all", filteredUsers);
+    const filteredUsers = clients.filter(user => user.username !== username);
+    console.log("made filtered users and emit to added user", filteredUsers);
 
     client.emit("all users", filteredUsers);
-    client.broadcast.emit("new user", isUserExist ? userData : {});
 
     client.on(
       "chat message",
@@ -44,10 +27,9 @@ module.exports = server => {
     );
 
     client.on("disconnect", () => {
-      client.broadcast.json.emit("delete user", clientId);
-      delete clients[username];
-      console.log("user disconnected", username);
-      console.log("data after delete", clients);
+      client.broadcast.emit("delete user", clientId);
+      clients = clients.filter(user => user.id !== clientId);
+      console.log("delete user", clients);
     });
   });
 };
