@@ -1,35 +1,38 @@
-let clients = [];
+let users = [];
 
 module.exports = server => {
   const io = require("socket.io")(server);
 
-  io.on("connection", client => {
-    const clientId = client.id;
-    const username = client.request.headers.username;
-    const userData = {
-      id: clientId,
-      username
+  io.on("connection", socket => {
+    let id = socket.id;
+    let user = {
+      id,
+      username: socket.handshake.headers.username || "Guest"
     };
-    console.log("new user connected", userData);
+    !users.some(u => u.id === user.id) && users.push(user);
+    //users[id] = user;
+    console.log("User connected to chat: " + id);
+    let usersObj = {};
+    users.forEach(u => {
+      if (u.id !== id) {
+        usersObj[u.id] = u;
+      }
+    });
+    socket.emit("all users", usersObj);
+    socket.broadcast.emit("new user", user);
 
-    clients.push(userData);
+    socket.on("chat message", (data, recipientUserId) => {
+      if (io.sockets.connected[recipientUserId]) {
+        io.to(recipientUserId).emit("chat message", data, user.id);
+      }
+    });
 
-    const filteredUsers = clients.filter(user => user.username !== username);
-    console.log("made filtered users and emit to added user", filteredUsers);
+    socket.on("disconnect", data => {
+      console.log("User disconnected from chat: " + id);
+      //delete users[id];
+      users = users.filter(u => u.id !== id);
 
-    client.emit("all users", filteredUsers);
-
-    client.on(
-      "chat message",
-      (message, sendToId) =>
-        sendToId !== clientId &&
-        io.to(sendToId).emit("chat message", message, clientId)
-    );
-
-    client.on("disconnect", () => {
-      client.broadcast.emit("delete user", clientId);
-      clients = clients.filter(user => user.id !== clientId);
-      console.log("delete user", clients);
+      socket.broadcast.emit("delete user", id);
     });
   });
 };
