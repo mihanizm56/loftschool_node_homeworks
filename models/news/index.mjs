@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { News } = require("./model");
+const { News } = require("./model.mjs");
 const {
   makeHashedPassword,
   compareHashedPasswords

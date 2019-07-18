@@ -1,7 +1,9 @@
-require("dotenv").config();
+import dotenv from "dotenv";
 
-const port = process.env.PORT || 8080;
-let dbURL;
+dotenv.config();
+
+export const port = process.env.PORT || 8080;
+export let dbURL;
 
 switch (process.env.NODE_ENV) {
   case "development":
@@ -18,8 +20,3 @@ switch (process.env.NODE_ENV) {
     DB_URI = process.env.DB_URI_DEVELOPMENT;
     break;
 }
-
-module.exports = {
-  port,
-  dbURL
-};

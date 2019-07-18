@@ -3,9 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "cross-env-shell NODE_ENV=development nodemon app.js",
-    "test": "mocha --reporter spec ./test",
-    "start": "cross-env-shell NODE_ENV=production node app.js",
+    "dev": "cross-env-shell NODE_ENV=development node --experimental-modules ./app.mjs",
+    "start": "cross-env-shell NODE_ENV=production --experimental-modules ./app.mjs",
     "stop": "taskkill /F /IM node.exe"
   },
   "dependencies": {

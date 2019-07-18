@@ -1,18 +1,22 @@
-require("dotenv").config();
-const { port, dbURL } = require("./services/variables");
-require("./services/db-listeners");
-const createError = require("http-errors");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-const bodyParser = require("body-parser");
-const router = require("./routes");
-const startChat = require("./controllers/chat");
+import dotenv from "dotenv";
+import { port, dbURL } from "./services/variables/index.mjs";
+import "./services/db-listeners/index.mjs";
+import createError from "http-errors";
+import mongoose from "mongoose";
+import cors from "cors";
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import bodyParser from "body-parser";
+// import router from "./routes/root.mjs";
+// import startChat from "./controllers/chat";
+import server from "http";
+
+/// prepare config for server
+dotenv.config();
 const app = express();
-const server = require("http").createServer(app);
+server.createServer(app);
 
 app.use(cors({ origin: "*" }));
 // app.use(logger("dev"));
@@ -21,9 +25,10 @@ app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(path.dirname(__filename), "public")));
 
-app.use("/", router);
+// app.use("/", router);
+app.use("/", () => console.log("test modules works"));
 
 app.use((req, res, next) => {
   next(createError(404));
@@ -64,17 +69,17 @@ const startDB = () => {
 const startApp = serverPort => serverState => {
   startDB().once("open", () => {
     startServer(serverState, serverPort)
-      .then(server => {
-        console.log("app started on port", port);
-        startChat(server);
-        console.log("chat started on port", port);
-      })
+      // .then(server => {
+      //   console.log("app started on port", port);
+      //   startChat(server);
+      //   console.log("chat started on port", port);
+      // })
       .catch(error => console.log("error during server start", error));
   });
 };
 
-if (require.main === module) {
-  startApp(port)(server);
-} else {
-  module.exports.startApp = startApp(port);
-}
+// if (require.main === module) {
+startApp(port)(server);
+// } else {
+//   module.exports.startApp = startApp(port);
+// }
